@@ -1,13 +1,8 @@
 ---
 title: vim
 date: 2021-06-16 22:44:51
-tags:
+tags: vim,linux
 ---
-Vim使用笔记
-Author:	jiqing Wu
-email:	jiqingwu@gmail.com
-Date:	2012-06-14
- 
 
 曾经使用了两年多的Vim，手册也翻过一遍。虽然现在不怎么用vim了，曾经的笔记还是贴出来，与喜欢vim的朋友分享。
 
