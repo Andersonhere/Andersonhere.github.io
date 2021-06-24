@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="关于作者：个人公众号：  Bit field 是什么？“ 位域 “ 或 “ 位段 “(Bit field)为一种数据结构，可以把数据以位的形式紧凑的储存，并允许程序员对此结构的位进行操作。这种数据结构的一个好处是它可以使数据单元节省储存空间，当程序需要成千上万个数据单元时，这种方法就显得尤为重要。第二个好处是位段可以很方便的访问一个整数值的部分内容从而可以简化程序源代码。而这种数据结构的缺点在于，">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Andersonhere">
+<meta property="og:url" content="http://example.com/2021/06/24/README/index.html">
+<meta property="og:site_name" content="Andersonhere">
+<meta property="og:description" content="关于作者：个人公众号：  Bit field 是什么？“ 位域 “ 或 “ 位段 “(Bit field)为一种数据结构，可以把数据以位的形式紧凑的储存，并允许程序员对此结构的位进行操作。这种数据结构的一个好处是它可以使数据单元节省储存空间，当程序需要成千上万个数据单元时，这种方法就显得尤为重要。第二个好处是位段可以很方便的访问一个整数值的部分内容从而可以简化程序源代码。而这种数据结构的缺点在于，">
+<meta property="og:locale">
+<meta property="og:image" content="http://example.com/2021/06/24/img/wechat.jpg">
+<meta property="article:published_time" content="2021-06-24T15:35:06.675Z">
+<meta property="article:modified_time" content="2021-06-16T14:21:57.349Z">
+<meta property="article:author" content="gaoqi">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2021/06/24/img/wechat.jpg">
+
+<link rel="canonical" href="http://example.com/2021/06/24/README/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-Hans'
+  };
+</script>
+
+  <title> | Andersonhere</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Andersonhere</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/06/24/README/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="gaoqi">
+      <meta itemprop="description" content="冷静">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Andersonhere">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2021-06-24 23:35:06" itemprop="dateCreated datePublished" datetime="2021-06-24T23:35:06+08:00">2021-06-24</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-06-16 22:21:57" itemprop="dateModified" datetime="2021-06-16T22:21:57+08:00">2021-06-16</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="关于作者："><a href="#关于作者：" class="headerlink" title="关于作者："></a>关于作者：</h2><p>个人公众号：</p>
+<p><img src="../img/wechat.jpg"></p>
+<h2 id="Bit-field-是什么？"><a href="#Bit-field-是什么？" class="headerlink" title="Bit field 是什么？"></a>Bit field 是什么？</h2><p>“ 位域 “ 或 “ 位段 “(Bit field)为一种数据结构，可以把数据以位的形式紧凑的储存，并允许程序员对此结构的位进行操作。这种数据结构的一个好处是它可以使数据单元节省储存空间，当程序需要成千上万个数据单元时，这种方法就显得尤为重要。第二个好处是位段可以很方便的访问一个整数值的部分内容从而可以简化程序源代码。而这种数据结构的缺点在于，位段实现依赖于具体的机器和系统，在不同的平台可能有不同的结果，这导致了位段在本质上是不可移植的。</p>
+<ul>
+<li>位域在内存中的布局是与机器有关的</li>
+<li>位域的类型必须是整型或枚举类型，带符号类型中的位域的行为将因具体实现而定</li>
+<li>取地址运算符（&amp;）不能作用于位域，任何指针都无法指向类的位域</li>
+</ul>
+<h2 id="位域使用"><a href="#位域使用" class="headerlink" title="位域使用"></a>位域使用</h2><p>位域通常使用结构体声明， 该结构声明为每个位域成员设置名称，并决定其宽度：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">struct bit_field_name</span><br><span class="line">&#123;</span><br><span class="line">	type member_name : width;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+
+
+<table>
+<thead>
+<tr>
+<th>Elements</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>bit_field_name</td>
+<td>位域结构名</td>
+</tr>
+<tr>
+<td>type</td>
+<td>位域成员的类型，必须为 int、signed int 或者 unsigned int 类型</td>
+</tr>
+<tr>
+<td>member_name</td>
+<td>位域成员名</td>
+</tr>
+<tr>
+<td>width</td>
+<td>规定成员所占的位数</td>
+</tr>
+</tbody></table>
+<p>例如声明如下一个位域:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">struct _PRCODE</span><br><span class="line">&#123;</span><br><span class="line">	unsigned int code1: 2;</span><br><span class="line">	unsigned int cdde2: 2;</span><br><span class="line">	unsigned int code3: 8;</span><br><span class="line">&#125;;</span><br><span class="line">struct _PRCODE prcode;</span><br></pre></td></tr></table></figure>
+
+<p>该定义使 <code>prcode</code>包含 2 个 2 Bits 位域和 1 个 8 Bits 位域，我们可以使用结构体的成员运算符对其进行赋值</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">prcode.code1 = 0;</span><br><span class="line">prcode.code2 = 3;</span><br><span class="line">procde.code3 = 102;</span><br></pre></td></tr></table></figure>
+
+
+<p>赋值时要注意值的大小不能超过位域成员的容量，例如 prcode.code3 为 8 Bits 的位域成员，其容量为 2^8 = 256，即赋值范围应为 [0,255]。</p>
+<h2 id="位域的大小和对齐"><a href="#位域的大小和对齐" class="headerlink" title="位域的大小和对齐"></a>位域的大小和对齐</h2><h3 id="位域的大小"><a href="#位域的大小" class="headerlink" title="位域的大小"></a>位域的大小</h3><p>例如以下位域：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">struct box </span><br><span class="line">&#123;</span><br><span class="line">	unsigned int a: 1;</span><br><span class="line">	unsigned int  : 3;</span><br><span class="line">	unsigned int b: 4;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>该位域结构体中间有一个未命名的位域，占据 3 Bits，仅起填充作用，并无实际意义。 填充使得该结构总共使用了 8 Bits。但 C 语言使用 unsigned int 作为位域的基本单位，即使一个结构的唯一成员为 1 Bit 的位域，该结构大小也和一个 unsigned int 大小相同。 有些系统中，unsigned int 为 16 Bits，在 x86 系统中为 32 Bits。文章以下均默认 unsigned int 为 32 Bits。</p>
+<h3 id="位域的对齐"><a href="#位域的对齐" class="headerlink" title="位域的对齐"></a>位域的对齐</h3><p>一个位域成员不允许跨越两个 unsigned int 的边界，如果成员声明的总位数超过了一个 unsigned int 的大小， 那么编辑器会自动移位位域成员，使其按照 unsigned int 的边界对齐。<br>例如：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">struct stuff </span><br><span class="line">&#123;</span><br><span class="line">	unsigned int field1: 30;</span><br><span class="line">	unsigned int field2: 4;</span><br><span class="line">	unsigned int field3: 3;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+
+
+<p><code>field1</code> + <code>field2</code> = 34 Bits，超出 32 Bits, 编译器会将<code>field2</code>移位至下一个 unsigned int 单元存放， stuff.field1 和 stuff.field2 之间会留下一个 2 Bits 的空隙， stuff.field3 紧跟在 stuff.field2 之后，该结构现在大小为 2 * 32 = 64 Bits。</p>
+<p>这个空洞可以用之前提到的未命名的位域成员填充，我们也可以使用一个宽度为 0 的未命名位域成员令下一位域成员与下一个整数对齐。<br>例如:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">struct stuff </span><br><span class="line">&#123;</span><br><span class="line">	unsigned int field1: 30;</span><br><span class="line">	unsigned int       : 2;</span><br><span class="line">	unsigned int field2: 4;</span><br><span class="line">	unsigned int       : 0;</span><br><span class="line">	unsigned int field3: 3; </span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>这里 stuff.field1 与 stuff.field2 之间有一个 2 Bits 的空隙，stuff.field3 则存储在下一个 unsigned int 中，该结构现在大小为 3 * 32 = 96 Bits。</p>
+<p>学习代码见：<a href="learn.cpp">learn.cpp</a></p>
+<h2 id="位域的初始化和位的重映射"><a href="#位域的初始化和位的重映射" class="headerlink" title="位域的初始化和位的重映射"></a>位域的初始化和位的重映射</h2><h3 id="初始化"><a href="#初始化" class="headerlink" title="初始化"></a>初始化</h3><p>位域的初始化与普通结构体初始化的方法相同，这里列举两种，如下:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">struct stuff s1= &#123;20,8,6&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>或者直接为位域成员赋值</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">struct stuff s1;</span><br><span class="line">s1.field1 = 20;</span><br><span class="line">s1.field2 = 8;</span><br><span class="line">s1.field3 = 4;</span><br></pre></td></tr></table></figure>
+
+<h3 id="位域的重映射-Re-mapping"><a href="#位域的重映射-Re-mapping" class="headerlink" title="位域的重映射 (Re-mapping)"></a>位域的重映射 (Re-mapping)</h3><p>声明一个 大小为 32 Bits 的位域</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">struct box &#123;</span><br><span class="line">	unsigned int ready:     2;</span><br><span class="line">	unsigned int error:     2;</span><br><span class="line">	unsigned int command:   4;</span><br><span class="line">	unsigned int sector_no: 24;</span><br><span class="line">&#125;b1;</span><br></pre></td></tr></table></figure>
+
+<h4 id="利用重映射将位域归零"><a href="#利用重映射将位域归零" class="headerlink" title="利用重映射将位域归零"></a>利用重映射将位域归零</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">int* p = (int *) &amp;b1;  // 将 &quot;位域结构体的地址&quot; 映射至 &quot;整形（int*) 的地址&quot; </span><br><span class="line">*p = 0;                // 清除 s1，将各成员归零</span><br></pre></td></tr></table></figure>
+
+<h4 id="利用联合-union-将-32-Bits-位域-重映射至-unsigned-int-型"><a href="#利用联合-union-将-32-Bits-位域-重映射至-unsigned-int-型" class="headerlink" title="利用联合 (union) 将 32 Bits 位域 重映射至 unsigned int 型"></a>利用联合 (union) 将 32 Bits 位域 重映射至 unsigned int 型</h4><p>先简单介绍一下联合</p>
+<blockquote>
+<p>“联合” 是一种特殊的类，也是一种构造类型的数据结构。在一个 “联合” 内可以定义多种不同的数据类型， 一个被说明为该 “联合” 类型的变量中，允许装入该 “联合” 所定义的任何一种数据，这些数据共享同一段内存，以达到节省空间的目的</p>
+<p>“联合” 与 “结构” 有一些相似之处。但两者有本质上的不同。在结构中各成员有各自的内存空间， 一个结构变量的总长度是各成员长度之和（空结构除外，同时不考虑边界调整）。而在 “联合” 中，各成员共享一段内存空间， 一个联合变量的长度等于各成员中最长的长度。应该说明的是， 这里所谓的共享不是指把多个成员同时装入一个联合变量内， 而是指该联合变量可被赋予任一成员值，但每次只能赋一种值， 赋入新值则冲去旧值。</p>
+</blockquote>
+<p>我们可以声明以下联合:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">union u_box &#123;</span><br><span class="line">  struct box st_box;     </span><br><span class="line">  unsigned int ui_box;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>x86 系统中 unsigned int 和 box 都为 32 Bits, 通过该联合使 st_box 和 ui_box 共享一块内存。具体位域中哪一位与 unsigned int 哪一位相对应，取决于编译器和硬件。<br>利用联合将位域归零，代码如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">union u_box u;</span><br><span class="line">u.ui_box = 0;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>学习参考自：<a target="_blank" rel="noopener" href="http://www.yuan-ji.me/C-C-%E4%BD%8D%E5%9F%9F-Bit-fields-%E5%AD%A6%E4%B9%A0%E5%BF%83%E5%BE%97/">http://www.yuan-ji.me/C-C-%E4%BD%8D%E5%9F%9F-Bit-fields-%E5%AD%A6%E4%B9%A0%E5%BF%83%E5%BE%97/</a></p>
+</blockquote>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/06/24/static%20%E9%82%A3%E4%BA%9B%E4%BA%8B/" rel="prev" title="static 那些事">
+      <i class="fa fa-chevron-left"></i> static 那些事
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2021/06/24/README/" rel="next" title="">
+       <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%B3%E4%BA%8E%E4%BD%9C%E8%80%85%EF%BC%9A"><span class="nav-number">1.</span> <span class="nav-text">关于作者：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Bit-field-%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="nav-number">2.</span> <span class="nav-text">Bit field 是什么？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BD%8D%E5%9F%9F%E4%BD%BF%E7%94%A8"><span class="nav-number">3.</span> <span class="nav-text">位域使用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BD%8D%E5%9F%9F%E7%9A%84%E5%A4%A7%E5%B0%8F%E5%92%8C%E5%AF%B9%E9%BD%90"><span class="nav-number">4.</span> <span class="nav-text">位域的大小和对齐</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%8D%E5%9F%9F%E7%9A%84%E5%A4%A7%E5%B0%8F"><span class="nav-number">4.1.</span> <span class="nav-text">位域的大小</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%8D%E5%9F%9F%E7%9A%84%E5%AF%B9%E9%BD%90"><span class="nav-number">4.2.</span> <span class="nav-text">位域的对齐</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BD%8D%E5%9F%9F%E7%9A%84%E5%88%9D%E5%A7%8B%E5%8C%96%E5%92%8C%E4%BD%8D%E7%9A%84%E9%87%8D%E6%98%A0%E5%B0%84"><span class="nav-number">5.</span> <span class="nav-text">位域的初始化和位的重映射</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%9D%E5%A7%8B%E5%8C%96"><span class="nav-number">5.1.</span> <span class="nav-text">初始化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%8D%E5%9F%9F%E7%9A%84%E9%87%8D%E6%98%A0%E5%B0%84-Re-mapping"><span class="nav-number">5.2.</span> <span class="nav-text">位域的重映射 (Re-mapping)</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%A9%E7%94%A8%E9%87%8D%E6%98%A0%E5%B0%84%E5%B0%86%E4%BD%8D%E5%9F%9F%E5%BD%92%E9%9B%B6"><span class="nav-number">5.2.1.</span> <span class="nav-text">利用重映射将位域归零</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%A9%E7%94%A8%E8%81%94%E5%90%88-union-%E5%B0%86-32-Bits-%E4%BD%8D%E5%9F%9F-%E9%87%8D%E6%98%A0%E5%B0%84%E8%87%B3-unsigned-int-%E5%9E%8B"><span class="nav-number">5.2.2.</span> <span class="nav-text">利用联合 (union) 将 32 Bits 位域 重映射至 unsigned int 型</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">gaoqi</p>
+  <div class="site-description" itemprop="description">冷静</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">97</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">gaoqi</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

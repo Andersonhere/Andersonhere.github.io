@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="C++ STL源码剖析之双向环形链表list0. 导语源码对应的版本为gcc-4.9.1 1.listlist为双向环形链表，其结构为：  自己绘制的图如下：  双向环状链表从节点值为3开始插入，红色框表示最后一个节点(end()指向的节点)。黄色线条表示指向前驱节点，黑色线条表示指向后继节点。 1.1 list源码1.1.1 类结构12345template&lt;typename _Tp, t">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Andersonhere">
+<meta property="og:url" content="http://example.com/2021/06/24/list/index.html">
+<meta property="og:site_name" content="Andersonhere">
+<meta property="og:description" content="C++ STL源码剖析之双向环形链表list0. 导语源码对应的版本为gcc-4.9.1 1.listlist为双向环形链表，其结构为：  自己绘制的图如下：  双向环状链表从节点值为3开始插入，红色框表示最后一个节点(end()指向的节点)。黄色线条表示指向前驱节点，黑色线条表示指向后继节点。 1.1 list源码1.1.1 类结构12345template&lt;typename _Tp, t">
+<meta property="og:locale">
+<meta property="og:image" content="https://raw.githubusercontent.com/Light-City/cloudimg/master/list_1.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Light-City/cloudimg/master/list_a.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Light-City/cloudimg/master/list_insert.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Light-City/cloudimg/master/list_a.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Light-City/cloudimg/master/step1.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Light-City/cloudimg/master/step2.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Light-City/cloudimg/master/step3.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Light-City/cloudimg/master/step5.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Light-City/cloudimg/master/step6.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Light-City/cloudimg/master/step7.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Light-City/cloudimg/master/list_erase.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Light-City/cloudimg/master/list_iterator_design.png">
+<meta property="article:published_time" content="2021-06-24T15:35:06.755Z">
+<meta property="article:modified_time" content="2021-06-16T14:21:57.385Z">
+<meta property="article:author" content="gaoqi">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/Light-City/cloudimg/master/list_1.png">
+
+<link rel="canonical" href="http://example.com/2021/06/24/list/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-Hans'
+  };
+</script>
+
+  <title> | Andersonhere</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Andersonhere</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/06/24/list/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="gaoqi">
+      <meta itemprop="description" content="冷静">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Andersonhere">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2021-06-24 23:35:06" itemprop="dateCreated datePublished" datetime="2021-06-24T23:35:06+08:00">2021-06-24</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-06-16 22:21:57" itemprop="dateModified" datetime="2021-06-16T22:21:57+08:00">2021-06-16</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="C-STL源码剖析之双向环形链表list"><a href="#C-STL源码剖析之双向环形链表list" class="headerlink" title="C++ STL源码剖析之双向环形链表list"></a>C++ STL源码剖析之双向环形链表list</h1><h2 id="0-导语"><a href="#0-导语" class="headerlink" title="0. 导语"></a>0. 导语</h2><p>源码对应的版本为<strong>gcc-4.9.1</strong></p>
+<h3 id="1-list"><a href="#1-list" class="headerlink" title="1.list"></a>1.list</h3><p>list为双向环形链表，其结构为：</p>
+<p><img src="https://raw.githubusercontent.com/Light-City/cloudimg/master/list_1.png"></p>
+<p>自己绘制的图如下：</p>
+<p><img src="https://raw.githubusercontent.com/Light-City/cloudimg/master/list_a.png" alt="list_all"></p>
+<p>双向环状链表从节点值为3开始插入，红色框表示最后一个节点(end()指向的节点)。黄色线条表示指向前驱节点，黑色线条表示指向后继节点。</p>
+<h3 id="1-1-list源码"><a href="#1-1-list源码" class="headerlink" title="1.1 list源码"></a>1.1 list源码</h3><h4 id="1-1-1-类结构"><a href="#1-1-1-类结构" class="headerlink" title="1.1.1 类结构"></a>1.1.1 类结构</h4><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> _Tp, <span class="keyword">typename</span> _Alloc = std::allocator&lt;_Tp&gt; &gt;</span><br><span class="line">class list : <span class="keyword">protected</span> _List_base&lt;_Tp, _Alloc&gt; </span><br><span class="line">&#123;</span><br><span class="line">       </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>list</code>继承<code>_List_base</code>。</p>
+<h4 id="1-1-2-双向环形链表实现"><a href="#1-1-2-双向环形链表实现" class="headerlink" title="1.1.2 双向环形链表实现"></a>1.1.2 双向环形链表实现</h4><p>【<strong>构造函数</strong>】</p>
+<p><strong>（1）不带任何元素的list</strong></p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">explicit</span></span></span><br><span class="line"><span class="function"><span class="title">list</span><span class="params">(<span class="keyword">const</span> allocator_type &amp;__a)</span> _GLIBCXX_NOEXCEPT: _Base(_Node_alloc_type(__a)) &#123;</span>&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>（2）带n个元素且赋予初值的list</strong></p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">explicit</span> <span class="title">list</span><span class="params">(size_type __n, <span class="keyword">const</span> value_type &amp;__value = value_type(),<span class="keyword">const</span> allocator_type &amp;__a = allocator_type())</span> : _Base(_Node_alloc_type(__a)) </span></span><br><span class="line"><span class="function">&#123;</span> _M_fill_initialize(__n, __value); &#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>（3）从一个范围中进行初始化list</strong></p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> _InputIterator&gt;</span></span><br><span class="line"><span class="function"><span class="title">list</span><span class="params">(_InputIterator __first, _InputIterator __last,</span></span></span><br><span class="line"><span class="params"><span class="function">     <span class="keyword">const</span> allocator_type &amp;__a = allocator_type())</span></span></span><br><span class="line"><span class="function">        : _Base(_Node_alloc_type(__a)) &#123;</span></span><br><span class="line">    <span class="comment">// Check whether it&#x27;s an integral type.  If so, it&#x27;s not an iterator.</span></span><br><span class="line">    <span class="keyword">typedef</span> <span class="keyword">typename</span> std::__is_integer&lt;_InputIterator&gt;::__type _Integral;</span><br><span class="line">    _M_initialize_dispatch(__first, __last, _Integral());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>【<strong>创建节点</strong>】</p>
+<p>做的事情：创建一个新的节点并动态分配内存，返回节点。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">_Node *_M_create_node(<span class="keyword">const</span> value_type &amp;__x) &#123;</span><br><span class="line">    _Node *__p = <span class="keyword">this</span>-&gt;_M_get_node();</span><br><span class="line">    __try</span><br><span class="line">    &#123;</span><br><span class="line">        _M_get_Tp_allocator().<span class="built_in">construct</span></span><br><span class="line">                (std::__addressof(__p-&gt;_M_data), __x);</span><br><span class="line">    &#125;</span><br><span class="line">    __catch(...)</span><br><span class="line">    &#123;</span><br><span class="line">        _M_put_node(__p);</span><br><span class="line">        __throw_exception_again;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> __p;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>注意到里面有两个重要的函数<code>_M_get_node</code>与<code>_M_put_node</code>，我们来查看后发现这些方法来自基类，源码为：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">_List_node&lt;_Tp&gt; * _M_get_node() &#123; <span class="keyword">return</span> _M_impl._Node_alloc_type::<span class="built_in">allocate</span>(<span class="number">1</span>); &#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">void</span> _M_put_node(_List_node&lt;_Tp&gt; *__p)   _GLIBCXX_NOEXCEPT</span><br><span class="line">&#123; _M_impl._Node_alloc_type::<span class="built_in">deallocate</span>(__p, <span class="number">1</span>); &#125;</span><br></pre></td></tr></table></figure>
+
+<p>对应的就是创建节点动态分配内存，若创建过程中抛出异常，则释放内存。</p>
+<p>【<strong>插入节点</strong>】</p>
+<p>插入节点包括：</p>
+<ul>
+<li>尾部插入n个指定节点值的节点，对应的函数<code>_M_fill_initialize</code></li>
+</ul>
+<p>在list的构造函数中使用：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">explicit</span> <span class="title">list</span><span class="params">(size_type __n, <span class="keyword">const</span> value_type &amp;__value = value_type(),<span class="keyword">const</span> allocator_type &amp;__a = allocator_type())</span> : _Base(_Node_alloc_type(__a)) </span></span><br><span class="line"><span class="function">&#123;</span> _M_fill_initialize(__n, __value); &#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>指定位置插入指定节点值的节点，对应的函数<code>_M_insert</code></li>
+</ul>
+<p>其中大家经常使用的<code>push_back</code>与<code>push_front</code>底层就是调用<code>_M_insert</code>函数。</p>
+<p>两者函数区别是：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">this</span>-&gt;_M_insert(<span class="built_in">end</span>(), __x);  <span class="comment">// push_back   尾部插入  </span></span><br><span class="line"><span class="keyword">this</span>-&gt;_M_insert(<span class="built_in">begin</span>(), __x); <span class="comment">// push_front 头部插入</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>双向环形链表插入函数</strong><code>_M_hook</code>   <strong>(最重要！！！)</strong></li>
+</ul>
+<p>像前面提到的<code>push_back</code>、<code>push_front</code>、<code>_M_insert</code>，还有<code>insert</code>都是使用最基础的双向链表插入函数<code>_M_hook</code>实现的。</p>
+<p><strong>下面来深入研究一下：</strong></p>
+<p>其中<code>_M_fill_initialize</code>源码如下：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">void</span> _M_fill_initialize(size_type __n, <span class="keyword">const</span> value_type &amp;__x) &#123;</span><br><span class="line">    <span class="keyword">for</span> (; __n; --__n)</span><br><span class="line">        <span class="built_in">push_back</span>(__x);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>其中<code>push_back</code>源码如下：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">push_back</span><span class="params">(<span class="keyword">const</span> value_type &amp;__x)</span> </span>&#123; <span class="keyword">this</span>-&gt;_M_insert(<span class="built_in">end</span>(), __x); &#125;</span><br></pre></td></tr></table></figure>
+
+<p>其中<code>_M_insert</code>，在指定的位置插入初始值为x的节点。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">void</span> _M_insert(iterator __position, <span class="keyword">const</span> value_type &amp;__x) &#123;</span><br><span class="line">    _Node *__tmp = _M_create_node(__x);</span><br><span class="line">    __tmp-&gt;_M_hook(__position._M_node);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>其中<code>_M_hook</code>实现在<code>gcc-4.9.1/libstdc++-v3/src/c++98/list.cc</code>中,当然<code>_List_node_base</code>的其他函数，例如：<code>_M_unhook</code>也在这个文件中。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 在指定的位置前插入this指向的节点</span></span><br><span class="line">void_List_node_base::_M_hook(_List_node_base* <span class="keyword">const</span> __position) _GLIBCXX_USE_NOEXCEPT</span><br><span class="line">&#123;</span><br><span class="line">  <span class="keyword">this</span>-&gt;_M_next = __position;		</span><br><span class="line">  <span class="keyword">this</span>-&gt;_M_prev = __position-&gt;_M_prev;</span><br><span class="line">  __position-&gt;_M_prev-&gt;_M_next = <span class="keyword">this</span>;</span><br><span class="line">  __position-&gt;_M_prev = <span class="keyword">this</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>所以上述细分为两个函数：我们把上述代码进行总结：</p>
+<p>（1）在指定的位置插入初始值为x的节点</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">void</span> _M_insert(iterator __position, <span class="keyword">const</span> value_type &amp;__x) &#123;</span><br><span class="line">    _Node *__tmp = _M_create_node(__x);</span><br><span class="line">    __tmp-&gt;_M_next = __position;			<span class="comment">// 第一步</span></span><br><span class="line">    __tmp-&gt;_M_prev = __position-&gt;_M_prev;	<span class="comment">// 第二步</span></span><br><span class="line">    __position-&gt;_M_prev-&gt;_M_next = __tmp;	<span class="comment">// 第三步</span></span><br><span class="line">    __position-&gt;_M_prev = __tmp;			<span class="comment">// 第四步</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这种插入是在指定位置前插入，(对应到代码就是)例如实现在指定<code>__position</code>节点为7前插入节点值9的节点(对应到代码就是__tmp)，下面阐述了具体的插入流程。</p>
+<p><img src="https://raw.githubusercontent.com/Light-City/cloudimg/master/list_insert.png" alt="list_insert"></p>
+<p>（2）在末尾依次插入n个节点值为x的节点</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">void</span> _M_fill_initialize(size_type __n, <span class="keyword">const</span> value_type &amp;__x) &#123;</span><br><span class="line">	<span class="keyword">for</span> (; __n; --__n)</span><br><span class="line">		_M_insert(<span class="built_in">end</span>(), __x);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>对于上述的代码大家或许会联想到<code>insert</code>,它有三个。<code>insert</code>实现文件在<code>libstdc++-v3/include/bits/list.tcc</code>。</p>
+<ul>
+<li><strong>第一：在指定迭代器之前插入指定元素值节点。</strong></li>
+</ul>
+<p>实现是调用前面的<code>_M_hook</code>函数。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> _Tp, <span class="keyword">typename</span> _Alloc&gt;</span><br><span class="line"><span class="keyword">typename</span> list&lt;_Tp, _Alloc&gt;::iterator</span><br><span class="line">list&lt;_Tp, _Alloc&gt;::</span><br><span class="line"><span class="meta">#<span class="meta-keyword">if</span> __cplusplus &gt;= 201103L</span></span><br><span class="line"><span class="built_in">insert</span>(const_iterator __position, <span class="keyword">const</span> value_type&amp; __x)</span><br><span class="line"><span class="meta">#<span class="meta-keyword">else</span></span></span><br><span class="line"><span class="built_in">insert</span>(iterator __position, <span class="keyword">const</span> value_type&amp; __x)</span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br><span class="line">&#123;</span><br><span class="line">  _Node* __tmp = _M_create_node(__x);</span><br><span class="line">  __tmp-&gt;_M_hook(__position._M_const_cast()._M_node);</span><br><span class="line">  <span class="keyword">return</span> <span class="built_in">iterator</span>(__tmp);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>第二：在指定迭代器之前插入n个指定节点值的节点。</strong></li>
+</ul>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">insert</span><span class="params">(iterator __position, size_type __n, <span class="keyword">const</span> value_type &amp;__x)</span> </span>&#123;</span><br><span class="line">    list __tmp(__n, __x, <span class="built_in">get_allocator</span>());</span><br><span class="line">    <span class="built_in">splice</span>(__position, __tmp);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>实现是先调用list构造函数，完成创建一个拥有n个指定节点值的list。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">explicit</span> <span class="title">list</span><span class="params">(size_type __n, <span class="keyword">const</span> value_type &amp;__value = value_type(),<span class="keyword">const</span> allocator_type &amp;__a = allocator_type())</span> : _Base(_Node_alloc_type(__a)) </span></span><br><span class="line"><span class="function">&#123;</span> _M_fill_initialize(__n, __value); &#125;</span><br></pre></td></tr></table></figure>
+
+<p>然后使用<code>splice</code>函数完成从另一个list中来插入当前list。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">splice</span><span class="params">(iterator __position, list &amp;__x)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (!__x.<span class="built_in">empty</span>()) &#123;</span><br><span class="line">        _M_check_equal_allocators(__x);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">this</span>-&gt;_M_transfer(__position._M_const_cast(),</span><br><span class="line">                          __x.<span class="built_in">begin</span>(), __x.<span class="built_in">end</span>());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>其中<code>_M_transfer</code>追踪代码，可以知道：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Moves the elements from [first,last) before position.</span></span><br><span class="line"><span class="keyword">void</span></span><br><span class="line">_M_transfer(iterator __position, iterator __first, iterator __last) &#123;</span><br><span class="line">    __position._M_node-&gt;_M_transfer(__first._M_node, __last._M_node);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>再次分析得到其来自list的基类<code>_List_node_base</code>，而<code>_M_transfer</code>实现文件在<code>gcc-4.9.1/libstdc++-v3/src/c++98/list.cc</code>中：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">void</span> _List_node_base::</span><br><span class="line">_M_transfer(_List_node_base * <span class="keyword">const</span> __first,</span><br><span class="line">    _List_node_base * <span class="keyword">const</span> __last) _GLIBCXX_USE_NOEXCEPT</span><br><span class="line">&#123;</span><br><span class="line">  <span class="keyword">if</span> (<span class="keyword">this</span> != __last)</span><br><span class="line">  &#123;</span><br><span class="line">      <span class="comment">// Remove [first, last) from its old position.</span></span><br><span class="line">      __last-&gt;_M_prev-&gt;_M_next  = <span class="keyword">this</span>;</span><br><span class="line">      __first-&gt;_M_prev-&gt;_M_next = __last;</span><br><span class="line">      <span class="keyword">this</span>-&gt;_M_prev-&gt;_M_next    = __first;</span><br><span class="line"></span><br><span class="line">      <span class="comment">// Splice [first, last) into its new position.</span></span><br><span class="line">      _List_node_base* <span class="keyword">const</span> __tmp = <span class="keyword">this</span>-&gt;_M_prev;</span><br><span class="line">      <span class="keyword">this</span>-&gt;_M_prev                = __last-&gt;_M_prev;</span><br><span class="line">      __last-&gt;_M_prev              = __first-&gt;_M_prev;</span><br><span class="line">      __first-&gt;_M_prev             = __tmp;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>仍然是上述的图：</p>
+<p><img src="https://raw.githubusercontent.com/Light-City/cloudimg/master/list_a.png" alt="list_all"></p>
+<p>经过前面分析，我们知道<code>splice</code>是将上述图的所代表的整个list插入指定迭代器前面，例如，我们想要在下面两个节点前面插入，具体图形步骤如下：</p>
+<p><code>this</code>代表的节点为值为8的节点，下图描述的就是在节点10与节点8中间插入整个list。</p>
+<p><code>__last</code>代表的是红色框节点，该节点为<code>end()</code>指向的节点，我们是不需要该节点的，所以在后面处理中，会把该节点从整个list中去除掉。</p>
+<p><code>__first</code>代表的是图中节点值为3的节点。</p>
+<p><strong>第一步：先将最后一个有效节点，也就是红色框的前一个节点的next指针指向指定的节点8。</strong></p>
+<p><img src="https://raw.githubusercontent.com/Light-City/cloudimg/master/step1.png"></p>
+<p>对应代码为：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">__last-&gt;_M_prev-&gt;_M_next  = this;	</span><br></pre></td></tr></table></figure>
+
+<p><strong>第二步：<code>_last</code>的next指针指向自己。</strong></p>
+<p><img src="https://raw.githubusercontent.com/Light-City/cloudimg/master/step2.png"></p>
+<p>对应的代码为：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">__first-&gt;_M_prev-&gt;_M_next = __last;</span><br></pre></td></tr></table></figure>
+
+<p><strong>第三步：让指定迭代器之前的节点的nex指向原先list的第一个节点(<code>__first</code>)。</strong></p>
+<p><img src="https://raw.githubusercontent.com/Light-City/cloudimg/master/step3.png"></p>
+<p>对应的代码为：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">this-&gt;_M_prev-&gt;_M_next    = __first;</span><br></pre></td></tr></table></figure>
+
+<p><strong>第四步：保存指定迭代器的前驱节点(对应到哪图中的节点值为10的节点)。</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">_List_node_base* const __tmp = this-&gt;_M_prev;</span><br></pre></td></tr></table></figure>
+
+<p><strong>第五步：指定迭代器的前驱节点指向原list中实际最后一个节点(end()前一节点)。</strong></p>
+<p><img src="https://raw.githubusercontent.com/Light-City/cloudimg/master/step5.png"></p>
+<p>对应的代码为：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">this-&gt;_M_prev                = __last-&gt;_M_prev;</span><br></pre></td></tr></table></figure>
+
+<p><strong>第六步：让原list的最后一个节点(end()指向的节点)的prev指向自己。</strong></p>
+<p><img src="https://raw.githubusercontent.com/Light-City/cloudimg/master/step6.png"></p>
+<p>对应的代码为：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">__last-&gt;_M_prev              = __first-&gt;_M_prev;</span><br></pre></td></tr></table></figure>
+
+<p><strong>第七步：让原list第一个节点的prev指向第四步保存的节点。</strong></p>
+<p><img src="https://raw.githubusercontent.com/Light-City/cloudimg/master/step7.png"></p>
+<p>对应的代码为：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">__first-&gt;_M_prev             = __tmp;</span><br></pre></td></tr></table></figure>
+
+<p>这样经过以上七步操作，完成了在节点8与节点10之前插入一个list。</p>
+<ul>
+<li><strong>第三：从一个list范围把数据插入到指定迭代器前面。</strong></li>
+</ul>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> _InputIterator&gt;</span></span><br><span class="line"><span class="function"><span class="keyword">void</span></span></span><br><span class="line"><span class="function"><span class="title">insert</span><span class="params">(iterator __position, _InputIterator __first,</span></span></span><br><span class="line"><span class="params"><span class="function">       _InputIterator __last)</span> </span>&#123;</span><br><span class="line">    list __tmp(__first, __last, <span class="built_in">get_allocator</span>());</span><br><span class="line">    <span class="built_in">splice</span>(__position, __tmp);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>原理同上，只不过这个<code>__tmp</code>是调用另外一个构造函数。</p>
+<p>【<strong>删除节点</strong>】</p>
+<ul>
+<li>删除指定节点</li>
+</ul>
+<p>删除指定节点分为两个，第一个通过迭代器删除，第二个是通过元素值删除。</p>
+<p><strong>（1）通过迭代器删除，对应函数为erase</strong></p>
+<p>其中<code>pop_front</code>与<code>pop_back</code>、<code>erase</code>、<code>remove</code>底层实现基于<code>_M_erase</code>函数。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">this</span>-&gt;_M_erase(<span class="built_in">begin</span>()); 	<span class="comment">// pop_front 不断删除起点的元素</span></span><br><span class="line"><span class="keyword">this</span>-&gt;_M_erase(<span class="built_in">iterator</span>(<span class="keyword">this</span>-&gt;_M_impl._M_node._M_prev)); <span class="comment">// pop_back移除最后一个元素</span></span><br></pre></td></tr></table></figure>
+
+<p>在<code>libstdc++-v3/include/bits/list.tcc</code>中：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">erase</span>(iterator __position)</span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br><span class="line">&#123;</span><br><span class="line">  iterator __ret = <span class="built_in">iterator</span>(__position._M_node-&gt;_M_next);</span><br><span class="line">  _M_erase(__position._M_const_cast());</span><br><span class="line">  <span class="keyword">return</span> __ret;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>（2）通过元素值删除，对应函数为remove</strong></p>
+<p>特殊情况处理，当删除元素的地址与迭代器的地址一样的时候，先保存起来，最后判断保存的迭代器是不是end()，如果不是，就删除掉。底层仍旧是通过<code>_M_erase</code>删除。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> _Tp, <span class="keyword">typename</span> _Alloc&gt;</span><br><span class="line"><span class="keyword">void</span> list&lt;_Tp, _Alloc&gt;::<span class="built_in">remove</span>(<span class="keyword">const</span> value_type&amp; __value)</span><br><span class="line">&#123;</span><br><span class="line">  iterator __first = <span class="built_in">begin</span>();</span><br><span class="line">  iterator __last = <span class="built_in">end</span>();</span><br><span class="line">  iterator __extra = __last;</span><br><span class="line">  <span class="keyword">while</span> (__first != __last)</span><br><span class="line">  &#123;</span><br><span class="line">      iterator __next = __first;</span><br><span class="line">      ++__next;</span><br><span class="line">      <span class="keyword">if</span> (*__first == __value)</span><br><span class="line">        &#123;</span><br><span class="line">          <span class="comment">// _GLIBCXX_RESOLVE_LIB_DEFECTS</span></span><br><span class="line">          <span class="comment">// 526. Is it undefined if a function in the standard changes</span></span><br><span class="line">          <span class="comment">// in parameters?</span></span><br><span class="line">          <span class="keyword">if</span> (std::__addressof(*__first) != std::__addressof(__value))</span><br><span class="line">        _M_erase(__first);</span><br><span class="line">          <span class="keyword">else</span></span><br><span class="line">        __extra = __first;</span><br><span class="line">        &#125;</span><br><span class="line">      __first = __next;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">if</span> (__extra != __last)</span><br><span class="line">	_M_erase(__extra);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>除了这个remove外，还有一个是<code>remove_if</code>，根据条件来删除。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> _Tp, <span class="keyword">typename</span> _Alloc&gt;</span><br><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> _Predicate&gt;</span><br><span class="line"><span class="keyword">void</span> list&lt;_Tp, _Alloc&gt;::</span><br><span class="line"><span class="built_in">remove_if</span>(_Predicate __pred)</span><br><span class="line">&#123;</span><br><span class="line">    iterator __first = <span class="built_in">begin</span>();</span><br><span class="line">    iterator __last = <span class="built_in">end</span>();</span><br><span class="line">	<span class="keyword">while</span> (__first != __last)</span><br><span class="line">    &#123;</span><br><span class="line">        iterator __next = __first;</span><br><span class="line">        ++__next;</span><br><span class="line">        <span class="keyword">if</span> (__pred(*__first))</span><br><span class="line">          _M_erase(__first);</span><br><span class="line">        __first = __next;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>对上述的<code>remove</code>的if去掉，在里面添加一个判断即可。</p>
+<p>使用如下：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">bool</span> <span class="title">isone</span><span class="params">(<span class="keyword">int</span> one)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> one==<span class="number">2</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    list&lt;<span class="keyword">int</span>&gt; t;</span><br><span class="line">    t=&#123;<span class="number">3</span>,<span class="number">4</span>,<span class="number">0</span>,<span class="number">2</span>,<span class="number">0</span>,<span class="number">10</span>,<span class="number">10</span>&#125;;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">auto</span> i:t) cout&lt;&lt;i&lt;&lt;<span class="string">&quot; &quot;</span>;	 <span class="comment">// 3 4 0 2 0 10 10 </span></span><br><span class="line">    cout&lt;&lt;endl;</span><br><span class="line">    t.<span class="built_in">remove_if</span>(isone);</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">auto</span> i:t) cout&lt;&lt;i&lt;&lt;<span class="string">&quot; &quot;</span>;  <span class="comment">// 3 4 0 0 10 10 </span></span><br><span class="line">    cout&lt;&lt;endl;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>删除一系列节点</li>
+<li>删除所有节点，对应的函数<code>clear</code></li>
+</ul>
+<p><strong>（1）删除指定节点详细分析</strong></p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">_M_erase(iterator __position)</span><br><span class="line">_GLIBCXX_NOEXCEPT</span><br><span class="line">&#123;</span><br><span class="line">    __position._M_node-&gt;_M_unhook();</span><br><span class="line">    _Node *__n = <span class="keyword">static_cast</span>&lt;_Node *&gt;(__position._M_node);</span><br><span class="line"><span class="meta">#<span class="meta-keyword">if</span> __cplusplus &gt;= 201103L</span></span><br><span class="line">    _M_get_Node_allocator().<span class="built_in">destroy</span>(__n);</span><br><span class="line"><span class="meta">#<span class="meta-keyword">else</span></span></span><br><span class="line">    _M_get_Tp_allocator().<span class="built_in">destroy</span>(std::__addressof(__n-&gt;_M_data));</span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br><span class="line">    _M_put_node(__n);		<span class="comment">// 释放内存</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>其中<code>_M_unhook</code>实现在<code>gcc-4.9.1/libstdc++-v3/src/c++98/list.cc</code>，实现如下：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">void</span> _List_node_base::_M_unhook() _GLIBCXX_USE_NOEXCEPT</span><br><span class="line">&#123;</span><br><span class="line">  _List_node_base* <span class="keyword">const</span> __next_node = <span class="keyword">this</span>-&gt;_M_next;	<span class="comment">// 第一步：保存后继节点</span></span><br><span class="line">  _List_node_base* <span class="keyword">const</span> __prev_node = <span class="keyword">this</span>-&gt;_M_prev;	<span class="comment">// 第二步：保存前驱节点</span></span><br><span class="line">  __prev_node-&gt;_M_next = __next_node;					<span class="comment">// 第三步：前驱节点的next指向后继节点</span></span><br><span class="line">  __next_node-&gt;_M_prev = __prev_node;					<span class="comment">// 第四步：后继节点的prev指向前驱节点</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>例如：删除节点值为9的节点，第三与第四步图解：</p>
+<p><img src="https://raw.githubusercontent.com/Light-City/cloudimg/master/list_erase.png" alt="list_erase"></p>
+<p><strong>（2）删除一系列元素详细分析</strong></p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">iterator</span><br><span class="line"><span class="meta">#<span class="meta-keyword">if</span> __cplusplus &gt;= 201103L</span></span><br><span class="line"><span class="built_in">erase</span>(const_iterator __first, const_iterator __last) <span class="keyword">noexcept</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">else</span></span></span><br><span class="line"><span class="built_in">erase</span>(iterator __first, iterator __last)</span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">while</span> (__first != __last)</span><br><span class="line">        __first = <span class="built_in">erase</span>(__first);</span><br><span class="line">    <span class="keyword">return</span> __last._M_const_cast();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>使用erase，删除给定迭代器范围内的数据。</p>
+<p><strong>（3）删除所有元素详细分析</strong></p>
+<p>清空元素，并初始化，回到list默认状态。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">clear</span><span class="params">()</span></span></span><br><span class="line"><span class="function">_GLIBCXX_NOEXCEPT</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    _Base::_M_clear();</span><br><span class="line">    _Base::_M_init();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>其中<code>_M_clear</code>实现在：<code>libstdc++-v3/include/bits/list.tcc</code>中：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">_List_base&lt;_Tp, _Alloc&gt;::</span><br><span class="line">_M_clear() _GLIBCXX_NOEXCEPT</span><br><span class="line">&#123;</span><br><span class="line">  <span class="keyword">typedef</span> _List_node&lt;_Tp&gt;  _Node;</span><br><span class="line">  _Node* __cur = <span class="keyword">static_cast</span>&lt;_Node*&gt;(_M_impl._M_node._M_next);</span><br><span class="line">  <span class="keyword">while</span> (__cur != &amp;_M_impl._M_node)</span><br><span class="line">    &#123;</span><br><span class="line">      _Node* __tmp = __cur;			<span class="comment">// 保存节点</span></span><br><span class="line">      __cur = <span class="keyword">static_cast</span>&lt;_Node*&gt;(__cur-&gt;_M_next);	<span class="comment">// 往后遍历</span></span><br><span class="line">    <span class="meta">#<span class="meta-keyword">if</span> __cplusplus &gt;= 201103L</span></span><br><span class="line">      _M_get_Node_allocator().<span class="built_in">destroy</span>(__tmp);</span><br><span class="line">    <span class="meta">#<span class="meta-keyword">else</span></span></span><br><span class="line">      _M_get_Tp_allocator().<span class="built_in">destroy</span>(std::__addressof(__tmp-&gt;_M_data));</span><br><span class="line">    <span class="meta">#<span class="meta-keyword">endif</span></span></span><br><span class="line">      _M_put_node(__tmp);	<span class="comment">// 释放内存</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>_M_init</code>实现，全部指向自己即可。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">void</span> _M_init()</span><br><span class="line">_GLIBCXX_NOEXCEPT</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">this</span>-&gt;_M_impl._M_node._M_next = &amp;<span class="keyword">this</span>-&gt;_M_impl._M_node;</span><br><span class="line">    <span class="keyword">this</span>-&gt;_M_impl._M_node._M_prev = &amp;<span class="keyword">this</span>-&gt;_M_impl._M_node;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>【<strong>元素访问</strong>】</p>
+<p>每个都实现了两个版本：引用与常引用。</p>
+<ul>
+<li>front 返回第一个元素</li>
+</ul>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">reference <span class="title">front</span><span class="params">()</span></span></span><br><span class="line"><span class="function">_GLIBCXX_NOEXCEPT</span></span><br><span class="line"><span class="function"></span>&#123; <span class="keyword">return</span> *<span class="built_in">begin</span>(); &#125;</span><br><span class="line"><span class="function">const_reference</span></span><br><span class="line"><span class="function"><span class="title">front</span><span class="params">()</span> <span class="keyword">const</span></span></span><br><span class="line"><span class="function">_GLIBCXX_NOEXCEPT</span></span><br><span class="line"><span class="function"></span>&#123; <span class="keyword">return</span> *<span class="built_in">begin</span>(); &#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>返回最后一个元素</li>
+</ul>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">reference</span></span><br><span class="line"><span class="function"><span class="title">back</span><span class="params">()</span></span></span><br><span class="line"><span class="function">_GLIBCXX_NOEXCEPT</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    iterator __tmp = <span class="built_in">end</span>();</span><br><span class="line">    --__tmp;</span><br><span class="line">    <span class="keyword">return</span> *__tmp;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function">const_reference</span></span><br><span class="line"><span class="function"><span class="title">back</span><span class="params">()</span> <span class="keyword">const</span></span></span><br><span class="line"><span class="function">_GLIBCXX_NOEXCEPT</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    const_iterator __tmp = <span class="built_in">end</span>();</span><br><span class="line">    --__tmp;</span><br><span class="line">    <span class="keyword">return</span> *__tmp;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>【<strong>算法</strong>】</p>
+<ul>
+<li>unique</li>
+</ul>
+<p>从容器中的每个连续的相等元素组中除去除第一个元素外的所有元素。</p>
+<p>请注意，只有与<a target="_blank" rel="noopener" href="http://www.cplusplus.com/list">列表</a>容器紧邻的元素相比，该元素才从<a target="_blank" rel="noopener" href="http://www.cplusplus.com/list">列表</a>容器中删除。因此，此功能对于排序列表特别有用。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> _Tp, <span class="keyword">typename</span> _Alloc&gt;</span><br><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> _BinaryPredicate&gt;</span><br><span class="line">  <span class="keyword">void</span></span><br><span class="line">  list&lt;_Tp, _Alloc&gt;::</span><br><span class="line">  <span class="built_in">unique</span>(_BinaryPredicate __binary_pred)</span><br><span class="line">  &#123;</span><br><span class="line">    iterator __first = <span class="built_in">begin</span>();</span><br><span class="line">    iterator __last = <span class="built_in">end</span>();</span><br><span class="line">    <span class="keyword">if</span> (__first == __last)</span><br><span class="line">  <span class="keyword">return</span>;</span><br><span class="line">    iterator __next = __first;</span><br><span class="line">    <span class="keyword">while</span> (++__next != __last)</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="comment">// 满足条件就删除</span></span><br><span class="line">    <span class="keyword">if</span> (__binary_pred(*__first, *__next))</span><br><span class="line">       <span class="comment">// 删除</span></span><br><span class="line">      _M_erase(__next);</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">      __first = __next;</span><br><span class="line">    __next = __first;</span><br><span class="line">  &#125;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+
+<p>举例如下：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// list::unique</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;cmath&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;list&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">// a binary predicate implemented as a function:</span></span><br><span class="line"><span class="function"><span class="keyword">bool</span> <span class="title">same_integral_part</span> <span class="params">(<span class="keyword">double</span> first, <span class="keyword">double</span> second)</span></span></span><br><span class="line"><span class="function"></span>&#123; <span class="keyword">return</span> ( <span class="built_in"><span class="keyword">int</span></span>(first)==<span class="built_in"><span class="keyword">int</span></span>(second) ); &#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// a binary predicate implemented as a class:</span></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">is_near</span> &#123;</span></span><br><span class="line">  <span class="function"><span class="keyword">bool</span> <span class="title">operator</span><span class="params">()</span> <span class="params">(<span class="keyword">double</span> first, <span class="keyword">double</span> second)</span></span></span><br><span class="line"><span class="function">  </span>&#123; <span class="keyword">return</span> (<span class="built_in">fabs</span>(first-second)&lt;<span class="number">5.0</span>); &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span> <span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">double</span> mydoubles[]=&#123; <span class="number">12.15</span>,  <span class="number">2.72</span>, <span class="number">73.0</span>,  <span class="number">12.77</span>,  <span class="number">3.14</span>,</span><br><span class="line">                       <span class="number">12.77</span>, <span class="number">73.35</span>, <span class="number">72.25</span>, <span class="number">15.3</span>,  <span class="number">72.25</span> &#125;;</span><br><span class="line">  <span class="function">std::list&lt;<span class="keyword">double</span>&gt; <span class="title">mylist</span> <span class="params">(mydoubles,mydoubles+<span class="number">10</span>)</span></span>;</span><br><span class="line">  </span><br><span class="line">  mylist.<span class="built_in">sort</span>();             <span class="comment">//  2.72,  3.14, 12.15, 12.77, 12.77,</span></span><br><span class="line">                             <span class="comment">// 15.3,  72.25, 72.25, 73.0,  73.35</span></span><br><span class="line"></span><br><span class="line">  mylist.<span class="built_in">unique</span>();           <span class="comment">//  2.72,  3.14, 12.15, 12.77</span></span><br><span class="line">                             <span class="comment">// 15.3,  72.25, 73.0,  73.35</span></span><br><span class="line"></span><br><span class="line">  mylist.<span class="built_in">unique</span> (same_integral_part);  <span class="comment">//  2.72,  3.14, 12.15</span></span><br><span class="line">                                       <span class="comment">// 15.3,  72.25, 73.0</span></span><br><span class="line"></span><br><span class="line">  mylist.<span class="built_in">unique</span> (<span class="built_in">is_near</span>());           <span class="comment">//  2.72, 12.15, 72.25</span></span><br><span class="line"></span><br><span class="line">  std::cout &lt;&lt; <span class="string">&quot;mylist contains:&quot;</span>;</span><br><span class="line">  <span class="keyword">for</span> (std::list&lt;<span class="keyword">double</span>&gt;::iterator it=mylist.<span class="built_in">begin</span>(); it!=mylist.<span class="built_in">end</span>(); ++it)</span><br><span class="line">    std::cout &lt;&lt; <span class="string">&#x27; &#x27;</span> &lt;&lt; *it;</span><br><span class="line">  std::cout &lt;&lt; <span class="string">&#x27;\n&#x27;</span>;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>上述排序后会删除所有的重复元素，只剩下一个，而不排序只会删除重复且连续的元素。</p>
+<ul>
+<li>merge</li>
+</ul>
+<p>merge源码实现采用前面<code>_M_transfer</code>函数，假设现在有两个list，分别是list1与list2。list1中的元素与list2中的元素进行比较，如果list1中元素值小于list2中元素值，则对list1迭代器++，不进行任何操作，而如果list1中的元素值大于list2中的元素值，那么每次将list2这个小的元素对应的迭代器塞入<code>_M_transfer</code>函数中，通过这个函数完成向list1中刚才比较的迭代器前面插入list2较小的元素，那么最后所有元素都会被插入到list1中。</p>
+<p>当list1已经遍历完毕，而list2还没有遍历完毕，那么只需要执行一次<code>_M_transfer</code>，将list2链表从当前迭代器开始到最后的end插入到list1的末尾即可。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> _Tp, <span class="keyword">typename</span> _Alloc&gt;</span><br><span class="line"><span class="keyword">void</span></span><br><span class="line">list&lt;_Tp, _Alloc&gt;::</span><br><span class="line"><span class="meta">#<span class="meta-keyword">if</span> __cplusplus &gt;= 201103L</span></span><br><span class="line"><span class="built_in">merge</span>(list&amp;&amp; __x)</span><br><span class="line"><span class="meta">#<span class="meta-keyword">else</span></span></span><br><span class="line"><span class="built_in">merge</span>(list&amp; __x)</span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="comment">// _GLIBCXX_RESOLVE_LIB_DEFECTS</span></span><br><span class="line">  <span class="comment">// 300. list::merge() specification incomplete</span></span><br><span class="line">  <span class="keyword">if</span> (<span class="keyword">this</span> != &amp;__x)</span><br><span class="line">  &#123;</span><br><span class="line">      _M_check_equal_allocators(__x);</span><br><span class="line"></span><br><span class="line">      iterator __first1 = <span class="built_in">begin</span>();</span><br><span class="line">      iterator __last1 = <span class="built_in">end</span>();</span><br><span class="line">      iterator __first2 = __x.<span class="built_in">begin</span>();</span><br><span class="line">      iterator __last2 = __x.<span class="built_in">end</span>();</span><br><span class="line">      <span class="keyword">while</span> (__first1 != __last1 &amp;&amp; __first2 != __last2)</span><br><span class="line">        <span class="keyword">if</span> (*__first2 &lt; *__first1)</span><br><span class="line">         &#123;</span><br><span class="line">            iterator __next = __first2;</span><br><span class="line">            _M_transfer(__first1, __first2, ++__next);</span><br><span class="line">            __first2 = __next;</span><br><span class="line">         &#125;</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">          ++__first1;</span><br><span class="line">      <span class="keyword">if</span> (__first2 != __last2)</span><br><span class="line">        _M_transfer(__last1, __first2, __last2);</span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>使用：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line"> 	list&lt;<span class="keyword">int</span>&gt; l1 = &#123;<span class="number">2</span>,<span class="number">3</span>,<span class="number">5</span>,<span class="number">7</span>&#125;;</span><br><span class="line">    list&lt;<span class="keyword">int</span>&gt; l2 = &#123;<span class="number">1</span>,<span class="number">10</span>,<span class="number">9</span>,<span class="number">5</span>&#125;;</span><br><span class="line">    l1.<span class="built_in">sort</span>();</span><br><span class="line">    l2.<span class="built_in">sort</span>();</span><br><span class="line">    l1.<span class="built_in">merge</span>(l2);</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">auto</span> i:l1) cout&lt;&lt;i&lt;&lt;<span class="string">&quot; &quot;</span>;	<span class="comment">// 1 2 3 5 5 7 9 10</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>sort</li>
+</ul>
+<p>由于STL本身的排序算法sort接受的输入迭代器是随机访问迭代器，但是双向list链表容器的访问方式是双向迭代器，因此，不能使用STL本身的排序算法sort，必须自己定义属于自己访问的排序算法。我们从源码的剖析中，可以看到该排序算法思想类似于归并排序。</p>
+<p>sort中splice调用的是：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">splice</span><span class="params">(const_iterator __position, list&amp; __x, const_iterator __i)</span> <span class="keyword">noexcept</span></span></span><br><span class="line"><span class="function"></span>&#123; <span class="built_in">splice</span>(__position, std::<span class="built_in">move</span>(__x), __i); &#125;</span><br></pre></td></tr></table></figure>
+
+<p>进一步分析：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span></span></span><br><span class="line"><span class="function"><span class="title">splice</span><span class="params">(iterator __position, list &amp;__x, iterator __i)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    iterator __j = __i._M_const_cast();</span><br><span class="line">    ++__j;</span><br><span class="line">    <span class="keyword">if</span> (__position == __i || __position == __j)</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">this</span> != &amp;__x)</span><br><span class="line">        _M_check_equal_allocators(__x);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">this</span>-&gt;(__position._M_const_cast(),</span><br><span class="line">                      __i._M_const_cast(), __j);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>最后调用的是<code>_M_transfer</code>。</p>
+<p>在sort中还有一个函数<code>swap</code>，完成两个链表交换，实现代码在<code>gcc-4.9.1/libstdc++-v3/src/c++98/list.cc</code>中：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span></span></span><br><span class="line"><span class="function"><span class="title">_List_node_base::swap</span><span class="params">(_List_node_base&amp; __x,</span></span></span><br><span class="line"><span class="params"><span class="function">          _List_node_base&amp; __y)</span> _GLIBCXX_USE_NOEXCEPT</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">      <span class="keyword">if</span> ( __x._M_next != &amp;__x )</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="keyword">if</span> ( __y._M_next != &amp;__y )</span><br><span class="line">        &#123;</span><br><span class="line">          <span class="comment">// Both __x and __y are not empty.</span></span><br><span class="line">          std::<span class="built_in">swap</span>(__x._M_next,__y._M_next);</span><br><span class="line">          std::<span class="built_in">swap</span>(__x._M_prev,__y._M_prev);</span><br><span class="line">          __x._M_next-&gt;_M_prev = __x._M_prev-&gt;_M_next = &amp;__x;</span><br><span class="line">          __y._M_next-&gt;_M_prev = __y._M_prev-&gt;_M_next = &amp;__y;</span><br><span class="line">        &#125;</span><br><span class="line">      <span class="keyword">else</span></span><br><span class="line">        &#123;</span><br><span class="line">              <span class="comment">// __x is not empty, __y is empty.</span></span><br><span class="line">              __y._M_next = __x._M_next;</span><br><span class="line">              __y._M_prev = __x._M_prev;</span><br><span class="line">              __y._M_next-&gt;_M_prev = __y._M_prev-&gt;_M_next = &amp;__y;</span><br><span class="line">              __x._M_next = __x._M_prev = &amp;__x;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">      <span class="keyword">else</span> <span class="keyword">if</span> ( __y._M_next != &amp;__y )</span><br><span class="line">        &#123;</span><br><span class="line">          <span class="comment">// __x is empty, __y is not empty.</span></span><br><span class="line">          __x._M_next = __y._M_next;</span><br><span class="line">          __x._M_prev = __y._M_prev;</span><br><span class="line">          __x._M_next-&gt;_M_prev = __x._M_prev-&gt;_M_next = &amp;__x;</span><br><span class="line">          __y._M_next = __y._M_prev = &amp;__y;</span><br><span class="line">        &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>具体的实现思路是，判断两个链表为空还是不为空，然后修改next指针与prev指针。</p>
+<p>下面来看看强大的sort：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> _Tp, <span class="keyword">typename</span> _Alloc&gt;</span><br><span class="line"><span class="keyword">void</span></span><br><span class="line">list&lt;_Tp, _Alloc&gt;::</span><br><span class="line"><span class="built_in">sort</span>() &#123;</span><br><span class="line">    <span class="comment">// Do nothing if the list has length 0 or 1.</span></span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">this</span>-&gt;_M_impl._M_node._M_next != &amp;<span class="keyword">this</span>-&gt;_M_impl._M_node</span><br><span class="line">        &amp;&amp; <span class="keyword">this</span>-&gt;_M_impl._M_node._M_next-&gt;_M_next != &amp;<span class="keyword">this</span>-&gt;_M_impl._M_node) &#123;</span><br><span class="line">        list __carry; <span class="comment">// 辅助链表，用于从a中提取元素以及临时保存两个链表的合并结果</span></span><br><span class="line">        list __tmp[<span class="number">64</span>]; <span class="comment">// 保存着当前每一个归并层次的结果, i号链表保存的元素个数为2的i次方或者0</span></span><br><span class="line">        list *__fill = &amp;__tmp[<span class="number">0</span>]; <span class="comment">// 表示当前最大归并排序的层次，while循环之后__fill变成log2(list.size())</span></span><br><span class="line">        list *__counter;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">do</span> &#123;</span><br><span class="line">            __carry.<span class="built_in">splice</span>(__carry.<span class="built_in">begin</span>(), *<span class="keyword">this</span>, <span class="built_in">begin</span>()); <span class="comment">//把当前链表的第一个节点放在carry链表头</span></span><br><span class="line"></span><br><span class="line">            <span class="keyword">for</span> (__counter = &amp;__tmp[<span class="number">0</span>];</span><br><span class="line">                 __counter != __fill &amp;&amp; !__counter-&gt;<span class="built_in">empty</span>();</span><br><span class="line">                 ++__counter) &#123;</span><br><span class="line">                __counter-&gt;<span class="built_in">merge</span>(__carry);	<span class="comment">// 两个有序链表合并</span></span><br><span class="line">                __carry.<span class="built_in">swap</span>(*__counter); <span class="comment">// 类似于交换链表carry和counter[i]内容	</span></span><br><span class="line">            &#125;</span><br><span class="line">            __carry.<span class="built_in">swap</span>(*__counter); <span class="comment">// 类似于交换链表carry和counter[i]内容	</span></span><br><span class="line">            <span class="keyword">if</span> (__counter == __fill)</span><br><span class="line">                ++__fill;</span><br><span class="line">        &#125; <span class="keyword">while</span> (!<span class="built_in">empty</span>());</span><br><span class="line">		<span class="comment">// 每两个进行归并，依次网上，直到最后*(__fill-1)保存最后的排序结果。然后交换到当前list中。</span></span><br><span class="line">        <span class="keyword">for</span> (__counter = &amp;__tmp[<span class="number">1</span>]; __counter != __fill; ++__counter)</span><br><span class="line">            __counter-&gt;<span class="built_in">merge</span>(*(__counter - <span class="number">1</span>));</span><br><span class="line">        <span class="built_in">swap</span>(*(__fill - <span class="number">1</span>)); </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>上述代码看起来比较难懂，在网上查找后发现，G2.9中：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span> &lt;<span class="class"><span class="keyword">class</span> <span class="title">T</span>, <span class="keyword">class</span> <span class="title">Alloc</span>&gt;</span></span><br><span class="line"><span class="keyword">void</span> list&lt;T, Alloc&gt; :: <span class="built_in">sort</span>()&#123;</span><br><span class="line">    <span class="comment">// 判断链表是否为空或者只有一个元素</span></span><br><span class="line">    <span class="keyword">if</span>(node-&gt;next == node || <span class="built_in">link_type</span>(node-&gt;next)-&gt;next == node)&#123;</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    list&lt;T, Alloc&gt; carry;</span><br><span class="line">    list&lt;T, alloc&gt; counter[<span class="number">64</span>];</span><br><span class="line">    <span class="keyword">int</span> fill = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span>(!<span class="built_in">empty</span>())&#123;</span><br><span class="line">        carry.<span class="built_in">splice</span>(carry.<span class="built_in">begin</span>(), *<span class="keyword">this</span>, <span class="built_in">begin</span>());</span><br><span class="line">        <span class="keyword">int</span> i = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">while</span>(i &lt; fill &amp;&amp; !counter[i].<span class="built_in">empty</span>())&#123;</span><br><span class="line">            counter[i].<span class="built_in">merge</span>(carry);</span><br><span class="line">            carry.<span class="built_in">swap</span>(counter[i++]);</span><br><span class="line">        &#125;</span><br><span class="line">        carry.<span class="built_in">swap</span>(counter[i]);</span><br><span class="line">        <span class="keyword">if</span>(i == fill)&#123;</span><br><span class="line">            ++fill;</span><br><span class="line">        &#125; </span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">1</span>; i &lt; fill; ++i)&#123;</span><br><span class="line">        counter[i].<span class="built_in">merge</span>(counter[i<span class="number">-1</span>]);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">swap</span>(counter[fill<span class="number">-1</span>]);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>对应的外部实现是：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">sortList</span><span class="params">(list&lt;<span class="keyword">int</span>&gt; &amp;l)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (l.<span class="built_in">size</span>() &lt;= <span class="number">1</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    list&lt;<span class="keyword">int</span>&gt; carry;       <span class="comment">// 辅助链表，用于从a中提取元素以及临时保存两个链表的合并结果</span></span><br><span class="line">    list&lt;<span class="keyword">int</span>&gt; counter[<span class="number">64</span>]; <span class="comment">// 保存着当前每一个归并层次的结果, i号链表保存的元素个数为2的i次方或者0</span></span><br><span class="line">    <span class="keyword">int</span> fill = <span class="number">0</span>;          <span class="comment">// 表示当前最大归并排序的层次，while循环之后fill变成log2(a.size())</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span> (!l.<span class="built_in">empty</span>()) &#123;</span><br><span class="line">        carry.<span class="built_in">splice</span>(carry.<span class="built_in">begin</span>(), l, l.<span class="built_in">begin</span>()); <span class="comment">// 将链表a中的第一个元素移动至carry开头</span></span><br><span class="line">        <span class="keyword">int</span> i = <span class="number">0</span>;</span><br><span class="line">        <span class="comment">// 从小往大不断合并非空归并层次直至遇到空层或者到达当前最大归并层次</span></span><br><span class="line">        <span class="keyword">while</span> (i &lt; fill &amp;&amp; !counter[i].<span class="built_in">empty</span>()) &#123;</span><br><span class="line">            counter[i].<span class="built_in">merge</span>(carry);    <span class="comment">// 链表合并，结果链表是有序的，必须保证合并前两个链表是有序的</span></span><br><span class="line">            carry.<span class="built_in">swap</span>(counter[i++]);   <span class="comment">// 链表元素互换</span></span><br><span class="line">        &#125;</span><br><span class="line">        carry.<span class="built_in">swap</span>(counter[i]);</span><br><span class="line">        <span class="keyword">if</span> (i == fill) &#123;       <span class="comment">// i到达当前最大归并层次，说明得增加一层</span></span><br><span class="line">            ++fill;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt; fill; ++i) &#123;  <span class="comment">// 将所有归并层次的结果合并得到最终结果counter[fill - 1]</span></span><br><span class="line">        counter[i].<span class="built_in">merge</span>(counter[i - <span class="number">1</span>]);</span><br><span class="line">    &#125;</span><br><span class="line">    l.<span class="built_in">swap</span>(counter[fill - <span class="number">1</span>]);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这一块可以参考</p>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/chenhanzhun/article/details/39337331">https://blog.csdn.net/chenhanzhun/article/details/39337331</a></p>
+</blockquote>
+<p>上面给出了详细的过程图解。</p>
+<p>我们再次将G4.9转换对应的外部实现：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">sortList1</span><span class="params">(list&lt;<span class="keyword">int</span>&gt; &amp;l)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">typedef</span> list&lt;<span class="keyword">int</span>&gt; list;</span><br><span class="line">    <span class="keyword">if</span> (l.<span class="built_in">size</span>() &lt;= <span class="number">1</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    list __carry;</span><br><span class="line">    list __tmp[<span class="number">64</span>];</span><br><span class="line">    list *__fill = &amp;__tmp[<span class="number">0</span>];</span><br><span class="line">    list *__counter;</span><br><span class="line">    <span class="keyword">do</span> &#123;</span><br><span class="line">        __carry.<span class="built_in">splice</span>(__carry.<span class="built_in">begin</span>(), l, l.<span class="built_in">begin</span>());</span><br><span class="line">        <span class="keyword">for</span> (__counter = &amp;__tmp[<span class="number">0</span>];</span><br><span class="line">             __counter != __fill &amp;&amp; !__counter-&gt;<span class="built_in">empty</span>();</span><br><span class="line">             ++__counter) &#123;</span><br><span class="line">            __counter-&gt;<span class="built_in">merge</span>(__carry);</span><br><span class="line">            __carry.<span class="built_in">swap</span>(*__counter);</span><br><span class="line">        &#125;</span><br><span class="line">        __carry.<span class="built_in">swap</span>(*__counter);</span><br><span class="line">        <span class="keyword">if</span> (__counter == __fill) ++__fill;</span><br><span class="line">    &#125; <span class="keyword">while</span> (!l.<span class="built_in">empty</span>());</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (__counter = &amp;__tmp[<span class="number">1</span>]; __counter != __fill; ++__counter)</span><br><span class="line">        __counter-&gt;<span class="built_in">merge</span>(*(__counter - <span class="number">1</span>));</span><br><span class="line"></span><br><span class="line">    l.<span class="built_in">swap</span>(*(__fill - <span class="number">1</span>));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>使用：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    list&lt;<span class="keyword">int</span>&gt; l = &#123;<span class="number">7</span>, <span class="number">5</span>, <span class="number">8</span>, <span class="number">1</span>&#125;;</span><br><span class="line">    cout &lt;&lt; <span class="string">&quot;===============排序前==============&quot;</span> &lt;&lt; endl;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">auto</span> i:l) cout &lt;&lt; i &lt;&lt; <span class="string">&quot; &quot;</span>;</span><br><span class="line">    cout &lt;&lt; endl;</span><br><span class="line">    <span class="built_in">sortList1</span>(l);</span><br><span class="line">    cout &lt;&lt; <span class="string">&quot;===============排序后==============&quot;</span> &lt;&lt; endl;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">auto</span> i:l) cout &lt;&lt; i &lt;&lt; <span class="string">&quot; &quot;</span>;</span><br><span class="line">    cout &lt;&lt; endl;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>【<strong>操作符重载</strong>】</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> _Tp, <span class="keyword">typename</span> _Alloc&gt;</span><br><span class="line"><span class="keyword">inline</span> <span class="keyword">bool</span></span><br><span class="line"><span class="keyword">operator</span>==(<span class="keyword">const</span> list&lt;_Tp, _Alloc&gt; &amp;__x, <span class="keyword">const</span> list&lt;_Tp, _Alloc&gt; &amp;__y) &#123;</span><br><span class="line">    <span class="keyword">typedef</span> <span class="keyword">typename</span> list&lt;_Tp, _Alloc&gt;::const_iterator const_iterator;</span><br><span class="line">    const_iterator __end1 = __x.<span class="built_in">end</span>();</span><br><span class="line">    const_iterator __end2 = __y.<span class="built_in">end</span>();</span><br><span class="line"></span><br><span class="line">    const_iterator __i1 = __x.<span class="built_in">begin</span>();</span><br><span class="line">    const_iterator __i2 = __y.<span class="built_in">begin</span>();</span><br><span class="line">    <span class="keyword">while</span> (__i1 != __end1 &amp;&amp; __i2 != __end2 &amp;&amp; *__i1 == *__i2) &#123;</span><br><span class="line">        ++__i1;</span><br><span class="line">        ++__i2;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> __i1 == __end1 &amp;&amp; __i2 == __end2;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>实现思路是，迭代判断两个迭代器是否都抵达末尾。</p>
+<p>剩下就是其他的操作符重载，比较简单，就不阐述了。其中<code>lexicographical_compare</code>实现在<code>c++-v3/src/c++98/stl_algobase.h</code>中，该函数是按照字典序测试[frist1,last1)是否小于[first2,last2)。该函数使用opeartor&lt;或者是comp进行比较。其行为类似于：如果两个序列长度不同，并且短序列和长序列头部完全一样，例如example和examplee.那么，长度大的字典序比短序的大。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="class"><span class="keyword">class</span> <span class="title">InputIterator1</span>, <span class="keyword">class</span> <span class="title">InputIterator2</span>&gt;</span></span><br><span class="line"><span class="function"><span class="keyword">bool</span> <span class="title">lexicographical_compare</span> <span class="params">(InputIterator1 first1, InputIterator1 last1,</span></span></span><br><span class="line"><span class="params"><span class="function">InputIterator2 first2, InputIterator2 last2)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">while</span> (first1!=last1)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span> (first2==last2 || *first2&lt;*first1) <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span> (*first1&lt;*first2) <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">        ++first1; ++first2;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> (first2!=last2);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>使用：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">     vector&lt;<span class="keyword">char</span>&gt; v1&#123;<span class="string">&#x27;h&#x27;</span>,<span class="string">&#x27;e&#x27;</span>,<span class="string">&#x27;l&#x27;</span>,<span class="string">&#x27;l&#x27;</span>,<span class="string">&#x27;o&#x27;</span>&#125;;</span><br><span class="line">    vector&lt;<span class="keyword">char</span>&gt; v2&#123;<span class="string">&#x27;h&#x27;</span>,<span class="string">&#x27;e&#x27;</span>,<span class="string">&#x27;l&#x27;</span>,<span class="string">&#x27;l&#x27;</span>,<span class="string">&#x27;o&#x27;</span>,<span class="string">&#x27;o&#x27;</span>&#125;;</span><br><span class="line">    vector&lt;<span class="keyword">char</span>&gt; v3&#123;<span class="string">&#x27;h&#x27;</span>,<span class="string">&#x27;e&#x27;</span>,<span class="string">&#x27;l&#x27;</span>,<span class="string">&#x27;m&#x27;</span>,<span class="string">&#x27;o&#x27;</span>&#125;;</span><br><span class="line">    cout&lt;&lt;<span class="string">&quot;v1=&quot;</span>;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">char</span> i:v1)</span><br><span class="line">        cout&lt;&lt;i&lt;&lt;<span class="string">&quot; &quot;</span>;</span><br><span class="line">    cout&lt;&lt;endl;</span><br><span class="line">    cout&lt;&lt;<span class="string">&quot;v2=&quot;</span>;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">char</span> i:v2)</span><br><span class="line">        cout&lt;&lt;i&lt;&lt;<span class="string">&quot; &quot;</span>;</span><br><span class="line">    cout&lt;&lt;endl;</span><br><span class="line">    cout&lt;&lt;<span class="string">&quot;v3=&quot;</span>;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">char</span> i:v3)</span><br><span class="line">        cout&lt;&lt;i&lt;&lt;<span class="string">&quot; &quot;</span>;</span><br><span class="line">    cout&lt;&lt;endl;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span>(<span class="built_in">lexicographical_compare</span>(v1.<span class="built_in">begin</span>(),v1.<span class="built_in">end</span>(),v2.<span class="built_in">begin</span>(),v2.<span class="built_in">end</span>()))</span><br><span class="line">        cout&lt;&lt;<span class="string">&quot;v1 is less than v2 &quot;</span>&lt;&lt;endl;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">        cout&lt;&lt;<span class="string">&quot;v2 is less than v1 &quot;</span>&lt;&lt;endl;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span>(<span class="built_in">lexicographical_compare</span>(v1.<span class="built_in">begin</span>(),v1.<span class="built_in">end</span>(),v3.<span class="built_in">begin</span>(),v3.<span class="built_in">end</span>()))</span><br><span class="line">        cout&lt;&lt;<span class="string">&quot;v1 is less than v3 &quot;</span>&lt;&lt;endl;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">        cout&lt;&lt;<span class="string">&quot;v3 is less than v1 &quot;</span>&lt;&lt;endl;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>其它重载操作符如下：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> _Tp, <span class="keyword">typename</span> _Alloc&gt;</span><br><span class="line"><span class="keyword">inline</span> <span class="keyword">bool</span></span><br><span class="line"><span class="keyword">operator</span>&lt;(<span class="keyword">const</span> list&lt;_Tp, _Alloc&gt; &amp;__x, <span class="keyword">const</span> list&lt;_Tp, _Alloc&gt; &amp;__y) &#123;</span><br><span class="line">    <span class="keyword">return</span> std::<span class="built_in">lexicographical_compare</span>(__x.<span class="built_in">begin</span>(), __x.<span class="built_in">end</span>(),</span><br><span class="line">                                        __y.<span class="built_in">begin</span>(), __y.<span class="built_in">end</span>());</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/// Based on operator==</span></span><br><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> _Tp, <span class="keyword">typename</span> _Alloc&gt;</span><br><span class="line"><span class="keyword">inline</span> <span class="keyword">bool</span></span><br><span class="line"><span class="keyword">operator</span>!=(<span class="keyword">const</span> list&lt;_Tp, _Alloc&gt; &amp;__x, <span class="keyword">const</span> list&lt;_Tp, _Alloc&gt; &amp;__y) &#123; <span class="keyword">return</span> !(__x == __y); &#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/// Based on operator&lt;</span></span><br><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> _Tp, <span class="keyword">typename</span> _Alloc&gt;</span><br><span class="line"><span class="keyword">inline</span> <span class="keyword">bool</span></span><br><span class="line"><span class="keyword">operator</span>&gt;(<span class="keyword">const</span> list&lt;_Tp, _Alloc&gt; &amp;__x, <span class="keyword">const</span> list&lt;_Tp, _Alloc&gt; &amp;__y) &#123; <span class="keyword">return</span> __y &lt; __x; &#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/// Based on operator&lt;</span></span><br><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> _Tp, <span class="keyword">typename</span> _Alloc&gt;</span><br><span class="line"><span class="keyword">inline</span> <span class="keyword">bool</span></span><br><span class="line"><span class="keyword">operator</span>&lt;=(<span class="keyword">const</span> list&lt;_Tp, _Alloc&gt; &amp;__x, <span class="keyword">const</span> list&lt;_Tp, _Alloc&gt; &amp;__y) &#123; <span class="keyword">return</span> !(__y &lt; __x); &#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/// Based on operator&lt;</span></span><br><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> _Tp, <span class="keyword">typename</span> _Alloc&gt;</span><br><span class="line"><span class="keyword">inline</span> <span class="keyword">bool</span></span><br><span class="line"><span class="keyword">operator</span>&gt;=(<span class="keyword">const</span> list&lt;_Tp, _Alloc&gt; &amp;__x, <span class="keyword">const</span> list&lt;_Tp, _Alloc&gt; &amp;__y) &#123; <span class="keyword">return</span> !(__x &lt; __y); &#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="1-2-list基类源码"><a href="#1-2-list基类源码" class="headerlink" title="1.2 list基类源码"></a>1.2 list基类源码</h3><p><code>_list_base</code>中有一个结构体:<code>_List_impl</code>,而<code>_List_impl</code>中有一个<code>List_node_base</code>。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> _<span class="title">List_base</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line"><span class="keyword">protected</span>:</span><br><span class="line">  <span class="keyword">typedef</span> <span class="keyword">typename</span> _Alloc::<span class="keyword">template</span> rebind&lt;_List_node&lt;_Tp&gt; &gt;::other</span><br><span class="line">    _Node_alloc_type;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">typedef</span> <span class="keyword">typename</span> _Alloc::<span class="keyword">template</span> rebind&lt;_Tp&gt;::other _Tp_alloc_type;</span><br><span class="line"></span><br><span class="line">  <span class="class"><span class="keyword">struct</span> _<span class="title">List_impl</span></span></span><br><span class="line"><span class="class">  :</span> <span class="keyword">public</span> _Node_alloc_type</span><br><span class="line">  &#123;</span><br><span class="line">    __detail::_List_node_base _M_node;</span><br><span class="line"></span><br><span class="line">    _List_impl()</span><br><span class="line">    : _Node_alloc_type(), _M_node()</span><br><span class="line">    &#123; &#125;</span><br><span class="line"></span><br><span class="line">    _List_impl(<span class="keyword">const</span> _Node_alloc_type&amp; __a) _GLIBCXX_NOEXCEPT</span><br><span class="line">    : _Node_alloc_type(__a), _M_node()</span><br><span class="line">    &#123; &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">#<span class="meta-keyword">if</span> __cplusplus &gt;= 201103L</span></span><br><span class="line">    _List_impl(_Node_alloc_type&amp;&amp; __a) _GLIBCXX_NOEXCEPT</span><br><span class="line">    : _Node_alloc_type(std::<span class="built_in">move</span>(__a)), _M_node()</span><br><span class="line">    &#123; &#125;</span><br><span class="line">    <span class="meta">#<span class="meta-keyword">endif</span></span></span><br><span class="line">  &#125;;</span><br><span class="line"></span><br><span class="line">  _List_impl _M_impl;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>最后形成的图就是:</p>
+<p><img src="https://raw.githubusercontent.com/Light-City/cloudimg/master/list_iterator_design.png" alt="list&#39;s iterator_design"></p>
+<p>所以如果求:</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in"><span class="keyword">sizeof</span></span>(list&lt;<span class="keyword">int</span>&gt;)=<span class="number">16</span></span><br></pre></td></tr></table></figure>
+
+<p>原因是:</p>
+<p><code>list</code>的sizeof为1,所以sizeof来源于基类<code>_list_base</code>,而<code>_list_base</code>中有一个结构体:<code>_List_impl</code>,而<code>_List_impl</code>中有一个<code>_List_node_base</code>.</p>
+<p>我们知道<code>_List_node_base</code>,里面有两个指针,在64位上,每个为8字节,共16字节。</p>
+<h2 id="2-list’s-Iterator剖析"><a href="#2-list’s-Iterator剖析" class="headerlink" title="2.list’s Iterator剖析"></a>2.list’s Iterator剖析</h2><h3 id="2-1-iterator"><a href="#2-1-iterator" class="headerlink" title="2.1 iterator"></a>2.1 iterator</h3><p>list的iterator定义</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> _Tp&gt;</span><br><span class="line"><span class="class"><span class="keyword">struct</span> _<span class="title">List_iterator</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">  <span class="keyword">typedef</span> _List_iterator&lt;_Tp&gt;                _Self;</span><br><span class="line">  <span class="keyword">typedef</span> _List_node&lt;_Tp&gt;                    _Node;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">typedef</span> <span class="keyword">ptrdiff_t</span>                          difference_type;</span><br><span class="line">  <span class="keyword">typedef</span> std::bidirectional_iterator_tag    iterator_category;</span><br><span class="line">  <span class="keyword">typedef</span> _Tp                                value_type;</span><br><span class="line">  <span class="keyword">typedef</span> _Tp*                               pointer;</span><br><span class="line">  <span class="keyword">typedef</span> _Tp&amp;                               reference;</span><br><span class="line"></span><br><span class="line">   <span class="comment">// The only member points to the %list element.</span></span><br><span class="line">   __detail::_List_node_base* _M_node;         </span><br><span class="line">   <span class="comment">//  _List_node(节点的数据部分) -&gt; _List_node_base(前指针与后指针)</span></span><br><span class="line"></span><br><span class="line">  _List_iterator() _GLIBCXX_NOEXCEPT</span><br><span class="line">  : _M_node() &#123; &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">explicit</span></span><br><span class="line">  _List_iterator(__detail::_List_node_base* __x) _GLIBCXX_NOEXCEPT</span><br><span class="line">  : _M_node(__x) &#123; &#125;</span><br><span class="line"></span><br><span class="line">  _Self</span><br><span class="line">  _M_const_cast() <span class="keyword">const</span> _GLIBCXX_NOEXCEPT</span><br><span class="line">  &#123; <span class="keyword">return</span> *<span class="keyword">this</span>; &#125;</span><br><span class="line"> </span><br><span class="line">  <span class="comment">// The only member points to the %list element.</span></span><br><span class="line">  __detail::_List_node_base* _M_node;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>内部重载函数:</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Must downcast from _List_node_base to _List_node to get to _M_data.</span></span><br><span class="line"><span class="comment">// 重载*操作符</span></span><br><span class="line">reference <span class="keyword">operator</span>*() <span class="keyword">const</span> _GLIBCXX_NOEXCEPT</span><br><span class="line">&#123; </span><br><span class="line">	<span class="keyword">return</span> <span class="keyword">static_cast</span>&lt;_Node*&gt;(_M_node)-&gt;_M_data; </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 重载-&gt;操作符</span></span><br><span class="line">pointer <span class="keyword">operator</span>-&gt;() <span class="keyword">const</span> _GLIBCXX_NOEXCEPT</span><br><span class="line">&#123; </span><br><span class="line">	<span class="keyword">return</span> std::__addressof(<span class="keyword">static_cast</span>&lt;_Node*&gt;(_M_node)-&gt;_M_data); </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 重载前置++操作符  ++i</span></span><br><span class="line">_Self&amp; <span class="keyword">operator</span>++() _GLIBCXX_NOEXCEPT   </span><br><span class="line">&#123; </span><br><span class="line">	_M_node = _M_node-&gt;_M_next;</span><br><span class="line">	<span class="keyword">return</span> *<span class="keyword">this</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 重载后置++操作符 i++</span></span><br><span class="line">_Self <span class="keyword">operator</span>++(<span class="keyword">int</span>) _GLIBCXX_NOEXCEPT</span><br><span class="line">&#123;</span><br><span class="line">    _Self __tmp = *<span class="keyword">this</span>;			 <span class="comment">// 记录原值  *调用的是拷贝构造函数</span></span><br><span class="line">    _M_node = _M_node-&gt;_M_next;		 <span class="comment">// 进行操作</span></span><br><span class="line">    <span class="keyword">return</span> __tmp;					 <span class="comment">// 返回原值</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 重载前置--操作符  --i</span></span><br><span class="line">_Self&amp; <span class="keyword">operator</span>--() _GLIBCXX_NOEXCEPT</span><br><span class="line">&#123;</span><br><span class="line">	_M_node = _M_node-&gt;_M_prev;</span><br><span class="line">	<span class="keyword">return</span> *<span class="keyword">this</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 重载后置--操作符  --i</span></span><br><span class="line">_Self <span class="keyword">operator</span>--(<span class="keyword">int</span>) _GLIBCXX_NOEXCEPT</span><br><span class="line">&#123;</span><br><span class="line">    _Self __tmp = *<span class="keyword">this</span>;</span><br><span class="line">    _M_node = _M_node-&gt;_M_prev;</span><br><span class="line">    <span class="keyword">return</span> __tmp;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 重载++操作符</span></span><br><span class="line"><span class="keyword">bool</span> <span class="keyword">operator</span>==(<span class="keyword">const</span> _Self&amp; __x) <span class="keyword">const</span> _GLIBCXX_NOEXCEPT</span><br><span class="line">&#123; </span><br><span class="line">	<span class="keyword">return</span> _M_node == __x._M_node; </span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 重载!=操作符</span></span><br><span class="line"><span class="keyword">bool</span> <span class="keyword">operator</span>!=(<span class="keyword">const</span> _Self&amp; __x) <span class="keyword">const</span> _GLIBCXX_NOEXCEPT</span><br><span class="line">&#123; </span><br><span class="line">	<span class="keyword">return</span> _M_node != __x._M_node; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-2-结点设计"><a href="#2-2-结点设计" class="headerlink" title="2.2 结点设计"></a>2.2 结点设计</h3><p>iterator内部的<code>_List_node</code>,这里可以得到继承自<code>_List_node_base</code>.</p>
+<p><code>_List_node</code>放数据部分</p>
+<p><code>_List_node_base</code>放前后指针</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/// An actual node in the %list.</span></span><br><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> _Tp&gt;</span><br><span class="line"><span class="class"><span class="keyword">struct</span> _<span class="title">List_node</span> :</span> <span class="keyword">public</span> __detail::_List_node_base</span><br><span class="line">&#123;</span><br><span class="line">  <span class="comment">///&lt; User&#x27;s data.</span></span><br><span class="line">  _Tp _M_data;</span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">if</span> __cplusplus &gt;= 201103L</span></span><br><span class="line">  <span class="keyword">template</span>&lt;<span class="keyword">typename</span>... _Args&gt;</span><br><span class="line">    _List_node(_Args&amp;&amp;... __args)</span><br><span class="line">: __detail::_List_node_base(), _M_data(std::forward&lt;_Args&gt;(__args)...) </span><br><span class="line">    &#123; &#125;</span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p><code>_List_node_base</code>代码:</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> __detail</span><br><span class="line">&#123;</span><br><span class="line">    _GLIBCXX_BEGIN_NAMESPACE_VERSION</span><br><span class="line">    <span class="comment">/// Common part of a node in the %list. </span></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> _<span class="title">List_node_base</span></span></span><br><span class="line"><span class="class">    &#123;</span></span><br><span class="line">      _List_node_base* _M_next;</span><br><span class="line">      _List_node_base* _M_prev;</span><br><span class="line"></span><br><span class="line">      <span class="function"><span class="keyword">static</span> <span class="keyword">void</span></span></span><br><span class="line"><span class="function">      <span class="title">swap</span><span class="params">(_List_node_base&amp; __x, _List_node_base&amp; __y)</span> _GLIBCXX_USE_NOEXCEPT</span>;</span><br><span class="line"></span><br><span class="line">      <span class="keyword">void</span></span><br><span class="line">      _M_transfer(_List_node_base* <span class="keyword">const</span> __first,</span><br><span class="line">          _List_node_base* <span class="keyword">const</span> __last) _GLIBCXX_USE_NOEXCEPT;</span><br><span class="line"></span><br><span class="line">      <span class="keyword">void</span></span><br><span class="line">      _M_reverse() _GLIBCXX_USE_NOEXCEPT;</span><br><span class="line"></span><br><span class="line">      <span class="keyword">void</span></span><br><span class="line">      _M_hook(_List_node_base* <span class="keyword">const</span> __position) _GLIBCXX_USE_NOEXCEPT;</span><br><span class="line"></span><br><span class="line">      <span class="keyword">void</span></span><br><span class="line">      _M_unhook() _GLIBCXX_USE_NOEXCEPT;</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    _GLIBCXX_END_NAMESPACE_VERSION</span><br><span class="line">&#125; <span class="comment">// namespace detail</span></span><br></pre></td></tr></table></figure>
+
+<p>迭代器在设计的时候,总是保持前闭后开原则,例如iter-&gt;begin()指向第一个元素,iter-&gt;end()指向实际最后一个元素的下一个元素,故最后的设计刻意在环形list尾部加一个空白结点,用以符合STL前闭后开原则.</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/06/24/readme/" rel="prev" title="">
+      <i class="fa fa-chevron-left"></i> 
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2021/06/24/rb_tree/" rel="next" title="">
+       <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#C-STL%E6%BA%90%E7%A0%81%E5%89%96%E6%9E%90%E4%B9%8B%E5%8F%8C%E5%90%91%E7%8E%AF%E5%BD%A2%E9%93%BE%E8%A1%A8list"><span class="nav-number">1.</span> <span class="nav-text">C++ STL源码剖析之双向环形链表list</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#0-%E5%AF%BC%E8%AF%AD"><span class="nav-number">1.1.</span> <span class="nav-text">0. 导语</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-list"><span class="nav-number">1.1.1.</span> <span class="nav-text">1.list</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1-list%E6%BA%90%E7%A0%81"><span class="nav-number">1.1.2.</span> <span class="nav-text">1.1 list源码</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-1-1-%E7%B1%BB%E7%BB%93%E6%9E%84"><span class="nav-number">1.1.2.1.</span> <span class="nav-text">1.1.1 类结构</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-1-2-%E5%8F%8C%E5%90%91%E7%8E%AF%E5%BD%A2%E9%93%BE%E8%A1%A8%E5%AE%9E%E7%8E%B0"><span class="nav-number">1.1.2.2.</span> <span class="nav-text">1.1.2 双向环形链表实现</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-list%E5%9F%BA%E7%B1%BB%E6%BA%90%E7%A0%81"><span class="nav-number">1.1.3.</span> <span class="nav-text">1.2 list基类源码</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-list%E2%80%99s-Iterator%E5%89%96%E6%9E%90"><span class="nav-number">1.2.</span> <span class="nav-text">2.list’s Iterator剖析</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-iterator"><span class="nav-number">1.2.1.</span> <span class="nav-text">2.1 iterator</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-%E7%BB%93%E7%82%B9%E8%AE%BE%E8%AE%A1"><span class="nav-number">1.2.2.</span> <span class="nav-text">2.2 结点设计</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">gaoqi</p>
+  <div class="site-description" itemprop="description">冷静</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">97</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">gaoqi</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

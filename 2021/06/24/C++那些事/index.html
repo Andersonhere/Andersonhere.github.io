@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="Post not found: CPlusPlusThings&#x2F;Stories About C Plus Plus&#39; English version is here  感谢各位对《C++ 那些事》的支持，现将内容也同步至网站，可以打开网站直接阅读~欢迎大家 star、转发、PR。 直通点 https:&#x2F;&#x2F;light-city.club&#x2F;sc&#x2F; 关于作者公众号已开放两大入口，分别是专辑与菜单，可以">
+<meta property="og:type" content="article">
+<meta property="og:title" content="C++那些事">
+<meta property="og:url" content="http://example.com/2021/06/24/C++%E9%82%A3%E4%BA%9B%E4%BA%8B/index.html">
+<meta property="og:site_name" content="Andersonhere">
+<meta property="og:description" content="Post not found: CPlusPlusThings&#x2F;Stories About C Plus Plus&#39; English version is here  感谢各位对《C++ 那些事》的支持，现将内容也同步至网站，可以打开网站直接阅读~欢迎大家 star、转发、PR。 直通点 https:&#x2F;&#x2F;light-city.club&#x2F;sc&#x2F; 关于作者公众号已开放两大入口，分别是专辑与菜单，可以">
+<meta property="og:locale">
+<meta property="og:image" content="https://light-city.club/sc/assets/images/wechat.jpg">
+<meta property="og:image" content="https://www.hualigs.cn/image/60a24728bb736.jpg">
+<meta property="og:image" content="https://light-city.club/sc/assets/images/alipay.jpg">
+<meta property="og:image" content="https://light-city.club/sc/assets/images/wechat.png">
+<meta property="article:published_time" content="2021-06-24T14:28:12.000Z">
+<meta property="article:modified_time" content="2021-06-24T16:55:10.178Z">
+<meta property="article:author" content="gaoqi">
+<meta property="article:tag" content="C++">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://light-city.club/sc/assets/images/wechat.jpg">
+
+<link rel="canonical" href="http://example.com/2021/06/24/C++%E9%82%A3%E4%BA%9B%E4%BA%8B/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-Hans'
+  };
+</script>
+
+  <title>C++那些事 | Andersonhere</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Andersonhere</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/06/24/C++%E9%82%A3%E4%BA%9B%E4%BA%8B/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="gaoqi">
+      <meta itemprop="description" content="冷静">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Andersonhere">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          C++那些事
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2021-06-24 22:28:12" itemprop="dateCreated datePublished" datetime="2021-06-24T22:28:12+08:00">2021-06-24</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-06-25 00:55:10" itemprop="dateModified" datetime="2021-06-25T00:55:10+08:00">2021-06-25</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <ul>
+<li><a href="#">Post not found: CPlusPlusThings/Stories About C Plus Plus' English version is here</a></li>
+</ul>
+<p>感谢各位对《C++ 那些事》的支持，现将内容也同步至网站，可以打开网站直接阅读~欢迎大家 star、转发、PR。</p>
+<p><a target="_blank" rel="noopener" href="https://light-city.club/sc/">直通点</a></p>
+<p><a target="_blank" rel="noopener" href="https://light-city.club/sc/">https://light-city.club/sc/</a></p>
+<h3 id="关于作者"><a href="#关于作者" class="headerlink" title="关于作者"></a>关于作者</h3><p>公众号已开放两大入口，分别是专辑与菜单，可以直接在微信公众号上阅读《C++那些事》内容，配上该仓库的代码，将会非常的爽，建议大家关注一波。</p>
+<p>个人公众号：guangcity</p>
+<p><img src="https://light-city.club/sc/assets/images/wechat.jpg"></p>
+<p>欢迎大家反馈及C++交流，本人在微信创建了C++那些事交流群，优质的C++资源交流区，期待大家关注上面公众号，点击公众号右下角-&gt;联系我，拉你入群。</p>
+<hr>
+<p>另外，下面是我自己建立的知识星球，会带大家做一些小项目以及源码解读等方面成长。</p>
+<p><img src="https://www.hualigs.cn/image/60a24728bb736.jpg"></p>
+<span id="more"></span>
+
+<h3 id="项目运行"><a href="#项目运行" class="headerlink" title="项目运行"></a>项目运行</h3><ul>
+<li><p><strong>代码环境</strong></p>
+<p>Ubuntu 18.04</p>
+</li>
+<li><p><strong>编辑工具</strong></p>
+<p>CLion</p>
+</li>
+<li><p><strong>编译器</strong></p>
+</li>
+</ul>
+<blockquote>
+<p>gcc/g++</p>
+</blockquote>
+<p>尽量用g++，因为一开始我用的vim写的，所以纯g++，后来用编译器CLion，部分有CMakeLists.txt文件，直接导入就行，后面会更新这个文件包含整个项目，持续关注~</p>
+<h3 id="0-项目概要"><a href="#0-项目概要" class="headerlink" title="0.项目概要"></a>0.项目概要</h3><ul>
+<li>中文名：<strong>C++ 那些事</strong></li>
+<li>英文名：<strong>Stories About C Plus Plus</strong></li>
+</ul>
+<p>这是一个适合初学者从<u><strong>入门到进阶</strong></u>的仓库，解决了<u><strong>面试者与学习者</strong></u>想要<u><strong>深入 C++</strong></u>及如何<u><strong>入坑 C++</strong></u>的问题。除此之外，本仓库拓展了更加深入的源码分析，多线程并发等的知识，是一个比较全面的 C++ 学习从入门到进阶提升的仓库。</p>
+<h3 id="1-基础进阶"><a href="#1-基础进阶" class="headerlink" title="1.基础进阶"></a>1.基础进阶</h3><ul>
+<li> <a href="/2021/06/24/const%20%E9%82%A3%E4%BA%9B%E4%BA%8B/" title="const那些事">const那些事</a></li>
+<li> <a href="/2021/06/24/static%20%E9%82%A3%E4%BA%9B%E4%BA%8B/" title="static 那些事">static 那些事</a></li>
+<li> <a href="/2021/06/24/this%20%E9%82%A3%E4%BA%9B%E4%BA%8B/" title="this 那些事">this 那些事</a></li>
+<li> <a href="/2021/06/24/inline%20%E9%82%A3%E4%BA%9B%E4%BA%8B/" title="inline 那些事">inline 那些事</a></li>
+<li> <a href="/2021/06/24/sizeof%20%E9%82%A3%E4%BA%9B%E4%BA%8B/" title="sizeof 那些事">sizeof 那些事</a></li>
+<li> <a href="#">Post not found: CPlusPlusThings/basic_content/函数指针那些事</a></li>
+<li> <a href="#">Post not found: CPlusPlusThings/basic_content/纯虚函数和抽象类那些事</a></li>
+<li> <a href="#">Post not found: CPlusPlusThings/basic_content/vptr_vtable 那些事</a></li>
+<li> <a href="#">Post not found: CPlusPlusThings/basic_content/virtual 那些事</a></li>
+<li> <a href="#">Post not found: CPlusPlusThings/basic_content/volatile 那些事</a></li>
+<li> <a href="#">Post not found: CPlusPlusThings/basic_content/assert 那些事</a></li>
+<li> <a href="#">Post not found: CPlusPlusThings/basic_content/extern 那些事</a></li>
+<li> <a href="#">Post not found: CPlusPlusThings/basic_content/struct 那些事</a></li>
+<li> <a href="#">Post not found: CPlusPlusThings/basic_content/struct 与 class 那些事</a></li>
+<li> <a href="#">Post not found: CPlusPlusThings/basic_content/union 那些事</a></li>
+<li> <a href="#">Post not found: CPlusPlusThings/basic_content/c 实现 c++ 多态那些事</a></li>
+<li> <a href="#">Post not found: CPlusPlusThings/basic_content/explicit 那些事</a></li>
+<li> <a href="#">Post not found: CPlusPlusThings/basic_content/friend 那些事</a></li>
+<li> <a href="#">Post not found: CPlusPlusThings/basic_content/using 那些事</a></li>
+<li> <a href="#">Post not found: CPlusPlusThings/basic_content/:: 那些事</a></li>
+<li> <a href="#">Post not found: CPlusPlusThings/basic_content/enum 那些事</a></li>
+<li> <a href="#">Post not found: CPlusPlusThings/basic_content/decltype 那些事</a></li>
+<li> <a href="#">Post not found: CPlusPlusThings/basic_content/引用与指针那些事</a></li>
+<li> <a href="#">Post not found: CPlusPlusThings/basic_content/宏那些事</a></li>
+<li><p><a href="./basic_content/static">static 那些事</a></p>
+</li>
+<li><p><a href="./basic_content/this">this 那些事</a></p>
+</li>
+<li><p><a href="./basic_content/inline">inline 那些事</a></p>
+</li>
+<li><p><a href="./basic_content/sizeof">sizeof 那些事</a></p>
+</li>
+<li><p><a href="./basic_content/func_pointer">函数指针那些事</a></p>
+</li>
+<li><p><a href="./basic_content/abstract">纯虚函数和抽象类那些事</a></p>
+</li>
+<li><p><a href="./basic_content/vptr_vtable">vptr_vtable 那些事</a></p>
+</li>
+<li><p><a href="./basic_content/virtual">virtual 那些事</a></p>
+</li>
+<li><p><a href="./basic_content/volatile">volatile 那些事</a></p>
+</li>
+<li><p><a href="./basic_content/assert">assert 那些事</a></p>
+</li>
+<li><p><a href="./basic_content/bit">位域那些事</a></p>
+</li>
+<li><p><a href="./basic_content/extern">extern 那些事</a></p>
+</li>
+<li><p><a href="./basic_content/struct">struct 那些事</a></p>
+</li>
+<li><p><a href="./basic_content/struct_class">struct 与 class 那些事</a></p>
+</li>
+<li><p><a href="./basic_content/union">union 那些事</a></p>
+</li>
+<li><p><a href="./basic_content/c_poly">c 实现 c++ 多态那些事</a></p>
+</li>
+<li><p><a href="./basic_content/explicit">explicit 那些事</a></p>
+</li>
+<li><p><a href="./basic_content/friend">friend 那些事</a></p>
+</li>
+<li><p><a href="./basic_content/using">using 那些事</a></p>
+</li>
+<li><p><a href="./basic_content/maohao">:: 那些事</a></p>
+</li>
+<li><p><a href="./basic_content/enum">enum 那些事</a></p>
+</li>
+<li><p><a href="./basic_content/decltype">decltype 那些事</a></p>
+</li>
+<li><p><a href="./basic_content/pointer_refer">引用与指针那些事</a></p>
+</li>
+<li><p><a href="./basic_content/macro">宏那些事</a></p>
+</li>
+</ul>
+<h3 id="2-实战系列"><a href="#2-实战系列" class="headerlink" title="2.实战系列"></a>2.实战系列</h3><h4 id="2-1-10日狂练"><a href="#2-1-10日狂练" class="headerlink" title="2.1 10日狂练"></a>2.1 <a href="./practical_exercises/10_day_practice">10日狂练</a></h4><ul>
+<li><input checked="" disabled="" type="checkbox"> <a href="practical_exercises/10_day_practice/day1">day1</a></li>
+</ul>
+<p>基本c++语法</p>
+<ul>
+<li><input checked="" disabled="" type="checkbox"> <a href="practical_exercises/10_day_practice/day2">day2</a></li>
+</ul>
+<p>递归、结构体、枚举、静态变量等</p>
+<ul>
+<li><input checked="" disabled="" type="checkbox"> <a href="practical_exercises/10_day_practice/day3">day3</a></li>
+</ul>
+<p>函数</p>
+<ul>
+<li><input checked="" disabled="" type="checkbox"> <a href="practical_exercises/10_day_practice/day4">day4</a></li>
+</ul>
+<p>函数深入</p>
+<ul>
+<li><input checked="" disabled="" type="checkbox"> <a href="practical_exercises/10_day_practice/day5">day5</a></li>
+</ul>
+<p>继承多态</p>
+<ul>
+<li><input checked="" disabled="" type="checkbox"> <a href="practical_exercises/10_day_practice/day6">day6</a></li>
+</ul>
+<p>虚函数、抽象类</p>
+<ul>
+<li><input checked="" disabled="" type="checkbox"> <a href="practical_exercises/10_day_practice/day7">day7</a></li>
+</ul>
+<p>运算符重载</p>
+<ul>
+<li><input checked="" disabled="" type="checkbox"> <a href="practical_exercises/10_day_practice/day8">day8</a></li>
+</ul>
+<p>模板与STL</p>
+<ul>
+<li><input checked="" disabled="" type="checkbox"> <a href="practical_exercises/10_day_practice/day9">day9</a></li>
+</ul>
+<p>异常</p>
+<ul>
+<li><input checked="" disabled="" type="checkbox"> <a href="practical_exercises/10_day_practice/day10">day10</a></li>
+</ul>
+<p>文件与流</p>
+<h4 id="2-2-重点实战练习"><a href="#2-2-重点实战练习" class="headerlink" title="2.2 重点实战练习"></a>2.2 <a href="./practical_exercises/key_exercises/">重点实战练习</a></h4><p>├── <a href="./practical_exercises/key_exercises/%E4%B8%AD%E6%8B%AC%E5%8F%B7%E9%87%8D%E8%BD%BD.cpp">中括号重载.cpp</a><br>├── <a href="./practical_exercises/key_exercises/%E6%97%B6%E9%92%9F++%E8%BF%90%E7%AE%97%E7%AC%A6%E9%87%8D%E8%BD%BD.cpp">时钟++运算符重载.cpp</a><br>├── <a href="./practical_exercises/key_exercises/%E8%BF%90%E7%AE%97%E7%AC%A6%E9%87%8D%E8%BD%BD%E4%B9%8B%E5%BC%BA%E5%88%B6%E8%BD%AC%E6%8D%A2.cpp">运算符重载之强制转换.cpp</a><br>└── <a href="./practical_exercises/key_exercises/%E9%87%8D%E8%BD%BD%E5%9C%86%E6%8B%AC%E5%8F%B7%E7%9A%84%E6%97%B6%E9%92%9F.cpp">重载圆括号的时钟.cpp</a></p>
+<p>├── <a href="./practical_exercises/key_exercises/%E5%87%BD%E6%95%B0%E6%A8%A1%E6%9D%BF.cpp">函数模板.cpp</a></p>
+<p>├── <a href="./practical_exercises/key_exercises/%E5%8A%A8%E6%80%81%E6%95%B0%E7%BB%84.cpp">动态数组.cpp</a></p>
+<p>├── <a href="./practical_exercises/key_exercises/%E5%AD%97%E5%85%B8%E6%8F%92%E5%85%A5%E4%B8%8E%E6%9F%A5%E6%89%BE.cpp">字典插入与查找.cpp</a></p>
+<p>├── <a href="./practical_exercises/key_exercises/%E5%BC%82%E5%B8%B8%E6%8D%95%E8%8E%B7.cpp">异常捕获.cpp</a></p>
+<p>├── <a href="./practical_exercises/key_exercises/%E7%B1%BB%E6%A8%A1%E6%9D%BF%E4%B9%8B%E6%A0%88.cpp">类模板之栈.cpp</a></p>
+<p>├── <a href="./practical_exercises/key_exercises/%E7%B1%BB%E6%A8%A1%E6%9D%BF%E7%89%B9%E5%8C%96%E4%B9%8B%E6%95%B0%E7%BB%84.cpp">类模板特化之数组.cpp</a></p>
+<p>├── <a href="./practical_exercises/key_exercises/%E7%BB%A7%E6%89%BF%E4%B8%8E%E5%B0%81%E8%A3%85.cpp">继承与封装.cpp</a></p>
+<p>├── <a href="./practical_exercises/key_exercises/%E8%AF%BB%E5%86%99%E6%96%87%E4%BB%B6%E7%BB%BC%E5%90%88%E9%A2%98.cpp">读写文件综合题.cpp</a><br>├── <a href="./practical_exercises/key_exercises/%E8%BE%93%E5%85%A5%E8%BE%93%E5%87%BA%E8%BF%90%E7%AE%97%E7%AC%A6%E9%87%8D%E8%BD%BD.cpp">输入输出运算符重载.cpp</a><br>├── <a href="./practical_exercises/key_exercises/%E8%BE%93%E5%85%A5%E8%BE%93%E5%87%BA%E9%87%8D%E8%BD%BD.cpp">输入输出重载.cpp</a><br>├── <a href="./practical_exercises/key_exercises/%E8%BE%93%E5%87%BA%E6%A0%BC%E5%BC%8F.cpp">输出格式.cpp</a></p>
+<h3 id="3-C-2-0-新特性"><a href="#3-C-2-0-新特性" class="headerlink" title="3.C++2.0 新特性"></a>3.<a href="./c++2.0">C++2.0 新特性</a></h3><h4 id="3-0-概况"><a href="#3-0-概况" class="headerlink" title="3.0 概况"></a>3.0 概况</h4><p>C++2.0 是一个简称，意为「现代 C++」，包括 C++11/14/17/20。</p>
+<h4 id="3-1-C-11-新特性"><a href="#3-1-C-11-新特性" class="headerlink" title="3.1 C++11 新特性"></a>3.1 <a href="./c++2.0/c++11">C++11 新特性</a></h4><ul>
+<li><p><a href="./c++2.0/c++11/variadic">Variadic Templates</a></p>
+</li>
+<li><p>Spaces in Template Expressions</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">vector&lt;list&lt;<span class="keyword">int</span>&gt; &gt; <span class="comment">//ok in each C++ version</span></span><br><span class="line">vector&lt;list&lt;<span class="keyword">int</span>&gt;&gt; <span class="comment">// before c++ 11 error error: ‘&gt;&gt;’ should be ‘&gt; &gt;’ within a nested template argument list,c++11后可以正常通过</span></span><br></pre></td></tr></table></figure></li>
+<li><p><a href="./c++2.0/c++11/nullptr.cpp">nullptr and nullptr_t</a></p>
+</li>
+<li><p><a href="./c++2.0/c++11/auto.cpp">Automatic Type Deduction with auto</a></p>
+</li>
+<li><p><a href="./c++2.0/c++11/uniform_initialization.cpp">Uniform Initialization </a></p>
+</li>
+<li><p><a href="./c++2.0/c++11/initializer.cpp">initializer_list</a></p>
+</li>
+<li><p><a href="./c++2.0/c++11/explicit.cpp">explicit for ctors taking more than one argument</a></p>
+</li>
+<li><p><a href="./c++2.0/c++11/auto.cpp">range-based for statement</a></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span>(decl:col) &#123;</span><br><span class="line">    statement</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li><p><a href="./c++2.0/c++11/default_delete.cpp">=default,=delete</a></p>
+<p>如果你自行定义了一个 ctor,那么编译器就不会给你一个 default ctor<br>如果强制加上 =default,就可以重新获得并使用 default ctor.</p>
+</li>
+<li><p>Alias(化名)Template(template typedef)</p>
+<ul>
+<li><a href="./c++2.0/c++11/alias.cpp">alias.cpp</a></li>
+<li><a href="./c++2.0/c++11/template_template.cpp">template_template.cpp</a></li>
+</ul>
+</li>
+<li><p><a href="./c++2.0/template_template.cpp">template template parameter</a></p>
+</li>
+<li><p><a href="./c++2.0/c++11/type_alias.cpp">type alias</a></p>
+</li>
+<li><p><a href="./c++2.0/c++11/noexcept.cpp">noexcept</a></p>
+</li>
+<li><p><a href="./c++2.0/c++11/override.cpp">override</a></p>
+</li>
+<li><p><a href="./c++2.0/c++11/final.cpp">final</a></p>
+</li>
+<li><p><a href="./c++2.0/c++11/decltype.cpp">decltype</a></p>
+</li>
+<li><p><a href="./c++2.0/c++11/lambda.cpp">lambda</a></p>
+</li>
+<li><p><a href="./c++2.0/c++11/rvalue.cpp">Rvalue reference</a></p>
+</li>
+<li><p><a href="./c++2.0/c++11/move.cpp">move aware class</a></p>
+</li>
+<li><p>容器-结构与分类</p>
+<ul>
+<li>(1) 序列式容器包括：<code>array</code>(C++2.0 新引入),<code>vector</code>,<code>deque</code>,<code>list</code>,<code>forward_list</code>(C++2.0 新引入)</li>
+<li>(2) 关联式容器包括：<code>set/multiset</code>,<code>map/multimap</code></li>
+<li>(3) 无序容器(C++2.0 新引入,更换原先 <code>hash_xxx</code> 为 <code>unordered_xxx</code>)包括：<code>unordered_map/unordered_multimap,unordered_set/unordered_multiset</code></li>
+</ul>
+</li>
+<li><p><a href="./c++2.0/c++11/hash.cpp">Hash Function</a></p>
+</li>
+<li><p><a href="./c++2.0/c++11/tuple.cpp">tuple</a></p>
+<p>学习资料：<a target="_blank" rel="noopener" href="https://www.bilibili.com/video/av51863195?from=search&amp;seid=3610634846288253061">https://www.bilibili.com/video/av51863195?from=search&amp;seid=3610634846288253061</a></p>
+</li>
+</ul>
+<h4 id="3-2-C-14-17-20"><a href="#3-2-C-14-17-20" class="headerlink" title="3.2 C++14/17/20"></a>3.2 C++14/17/20</h4><p>待更新…</p>
+<h3 id="4-设计模式"><a href="#4-设计模式" class="headerlink" title="4.设计模式"></a>4.设计模式</h3><ul>
+<li><a href="./design_pattern/singleton">单例模式</a></li>
+<li><a href="./design_pattern/producer_consumer">生产消费者模式</a></li>
+</ul>
+<h3 id="5-STL-源码剖析"><a href="#5-STL-源码剖析" class="headerlink" title="5. STL 源码剖析"></a>5. <a href="./src_analysis/stl">STL 源码剖析</a></h3><p><strong>STL 源码剖析：gcc 4.9.1</strong></p>
+<ul>
+<li><a href="./src_analysis/stl/array.md">array</a></li>
+<li><a href="./src_analysis/stl/deque.md">deque</a></li>
+<li><a href="./src_analysis/stl/queue_stack.md">queue and stack</a></li>
+<li><a href="./src_analysis/stl/list.md">list</a></li>
+<li><a href="./src_analysis/stl/vector.md">vector</a></li>
+<li><a href="./src_analysis/stl/typename.md">typename</a></li>
+<li><a href="./src_analysis/stl/traits.md">traits</a></li>
+<li><a href="./src_analysis/stl/iterator.md">iterator</a></li>
+<li><a href="./src_analysis/stl/%E8%B0%88%E8%B0%88STL%E8%AE%BE%E8%AE%A1%E4%B9%8BEBO%E4%BC%98%E5%8C%96.md">谈谈 STL 设计之 EBO 优化</a></li>
+<li><a href="./src_analysis/stl/rb_tree.md">rb_tree</a></li>
+<li><a href="set_multiset.md">set and multiset</a></li>
+<li><a href="./src_analysis/stl/map_multimap.md">map and multimap</a></li>
+<li><a href="./src_analysis/stl/hashtable.md">hashtable</a></li>
+<li><a href="./src_analysis/stl/myhashtable.md">myhashtable</a></li>
+<li><a href="./src_analysis/stl/unordered_map.md">unordered_map</a></li>
+</ul>
+<h3 id="6-并发编程"><a href="#6-并发编程" class="headerlink" title="6. 并发编程"></a>6. <a href="./concurrency">并发编程</a></h3><h4 id="6-1-C-Concurrency-in-Action"><a href="#6-1-C-Concurrency-in-Action" class="headerlink" title="6.1 C++ Concurrency in Action"></a>6.1 C++ Concurrency in Action</h4><ul>
+<li><a href="./concurrency/concurrency_v1/chapter1">第一章</a></li>
+<li><a href="./concurrency/concurrency_v1/chapter2">第二章</a></li>
+</ul>
+<p>学习资料：<a target="_blank" rel="noopener" href="https://downdemo.gitbook.io/cpp-concurrency-in-action-2ed/">https://downdemo.gitbook.io/cpp-concurrency-in-action-2ed/</a></p>
+<h4 id="6-2-多线程与多进程"><a href="#6-2-多线程与多进程" class="headerlink" title="6.2 多线程与多进程"></a>6.2 多线程与多进程</h4><h5 id="6-2-1-Threading-In-C"><a href="#6-2-1-Threading-In-C" class="headerlink" title="6.2.1 Threading In C++"></a>6.2.1 Threading In C++</h5><ul>
+<li><a href="./concurrency/Threading_In_CPlusPlus/1.thread">介绍</a></li>
+<li><a href="./concurrency/Threading_In_CPlusPlus/2.create_type">创建线程的五种类型</a></li>
+<li><a href="./concurrency/Threading_In_CPlusPlus/3.join_detach">Join 与 Detachs</a></li>
+<li><a href="./concurrency/Threading_In_CPlusPlus/4.mutex">mutex in C++ Threading</a></li>
+</ul>
+<blockquote>
+<p>学习自：</p>
+<p><a target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=eZ8yKZo-PGw&amp;list=PLk6CEY9XxSIAeK-EAh3hB4fgNvYkYmghp&amp;index=4">https://www.youtube.com/watch?v=eZ8yKZo-PGw&amp;list=PLk6CEY9XxSIAeK-EAh3hB4fgNvYkYmghp&amp;index=4</a></p>
+</blockquote>
+<h3 id="7-C-惯用法"><a href="#7-C-惯用法" class="headerlink" title="7. C++ 惯用法"></a>7. <a href="./codingStyleIdioms">C++ 惯用法</a></h3><h5 id="你最喜欢的-c-编程风格惯用法是什么"><a href="#你最喜欢的-c-编程风格惯用法是什么" class="headerlink" title="你最喜欢的 c++ 编程风格惯用法是什么?"></a>你最喜欢的 c++ 编程风格惯用法是什么?</h5><ul>
+<li><a href="./codingStyleIdioms/1_classInitializers">1.类初始化列表</a></li>
+<li><a href="./codingStyleIdioms/2_enumclass_namespace">2.枚举类替换命名空间</a></li>
+<li><a href="./codingStyleIdioms/3_RAII">3.RAII(资源获取即初始化)</a></li>
+<li><a href="./codingStyleIdioms/4_copy-swap">4.copy and swap</a></li>
+<li><a href="./codingStyleIdioms/5_pImpl">5.pImpl(指针指向具体实现)</a></li>
+</ul>
+<h3 id="8-学习课程"><a href="#8-学习课程" class="headerlink" title="8.学习课程"></a>8.学习课程</h3><h4 id="8-1-极客时间《现代-C-实战-30-讲》"><a href="#8-1-极客时间《现代-C-实战-30-讲》" class="headerlink" title="8.1 极客时间《现代 C++ 实战 30 讲》"></a>8.1 <a target="_blank" rel="noopener" href="https://time.geekbang.org/channel/home">极客时间《现代 C++ 实战 30 讲》</a></h4><ul>
+<li><a href="./learn_class/modern_C++_30/RAII">堆、栈、RAII：C++ 里该如何管理资源？</a><ul>
+<li><a href="./modern_++_30/RAII/heap.cpp">堆</a></li>
+<li><a href="./learn_class/modern_C++_30/RAII/stack.cpp">栈</a></li>
+<li><a href="./learn_class/modern_C++_30/RAII/RAII.cpp">RAII</a></li>
+</ul>
+</li>
+<li><a href="./learn_class/modern_C++_30/smart_ptr">自己动手，实现 C++ 的智能指针</a><ul>
+<li><a href="./learn_class/modern_C++_30/smart_ptr/auto_scope.cpp">auto_ptr、scope_ptr</a></li>
+<li><a href="./learn_class/modern_C++_30/smart_ptr/unique_ptr.cpp">unique_ptr</a></li>
+<li><a href="./learn_class/modern_C++_30/smart_ptr/shared_ptr.cpp">shared_ptr</a></li>
+</ul>
+</li>
+<li><a href="./learn_class/modern_C++_30/reference">右值和移动究竟解决了什么问题？</a><ul>
+<li><a href="./learn_class/modern_C++_30/reference/reference.cpp">左值与右值</a></li>
+<li><a href="./learn_class/modern_C++_30/reference/lifetime.cpp">延长声明周期</a></li>
+<li><a href="./learn_class/modern_C++_30/reference/collapses.cpp">引用折叠</a></li>
+<li><a href="./learn_class/modern_C++_30/reference/forward.cpp">完美转发</a></li>
+<li><a href="./learn_class/modern_C++_30/reference/don'treturnReference.cpp">不要返回本地变量的引用</a></li>
+</ul>
+</li>
+<li><a href="./learn_class/modern_C++_30/container1">容器 1</a></li>
+<li><a href="./learn_class/modern_C++_30/container2">容器 2</a></li>
+<li><a href="./learn_class/modern_C++_30/exception">异常</a></li>
+<li><a href="./learn_class/modern_C++_30/literalAssert">字面量、静态断言和成员函数说明符</a></li>
+<li><a href="./learn_class/modern_C++_30/returnObj">是不是应该返回对象？</a></li>
+<li><a href="./learn_class/modern_C++_30/compilerpoly">编译期多态：泛型编程和模板入门</a></li>
+<li><a href="./learn_class/modern_C++_30/compilercompute">译期能做些什么？一个完整的计算世界</a></li>
+<li><a href="./learn_class/modern_C++_30/SFINAE">SFINAE：不是错误的替换失败是怎么回事?</a></li>
+<li><a href="./learn_class/modern_C++_30/constexpr">constexpr：一个常态的世界</a></li>
+<li><a href="./learn_class/modern_C++_30/functionLambda">函数对象和 lambda：进入函数式编程</a></li>
+<li><a href="./learn_class/modern_C++_30/memorymodel_atomic">内存模型和 atomic：理解并发的复杂性</a></li>
+</ul>
+<h3 id="9-工具篇"><a href="#9-工具篇" class="headerlink" title="9.工具篇"></a>9.工具篇</h3><h4 id="9-1-容器快捷输出工具"><a href="#9-1-容器快捷输出工具" class="headerlink" title="9.1 容器快捷输出工具"></a>9.1 <a href="./tool/output">容器快捷输出工具</a></h4><p>对吴老师的代码进行了修改，<a href="./tool/output/output_container.h">点击此处直通代码</a></p>
+<p>输入：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">map&lt;<span class="keyword">int</span>, <span class="keyword">int</span>&gt; mp&#123;</span><br><span class="line">            &#123;<span class="number">1</span>, <span class="number">1</span>&#125;,</span><br><span class="line">            &#123;<span class="number">2</span>, <span class="number">4</span>&#125;,</span><br><span class="line">            &#123;<span class="number">3</span>, <span class="number">9</span>&#125;&#125;;</span><br><span class="line">    cout &lt;&lt; mp &lt;&lt; endl;</span><br></pre></td></tr></table></figure>
+
+<p>输出结果显示：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123; <span class="number">1</span> =&gt; <span class="number">1</span>, <span class="number">2</span> =&gt; <span class="number">4</span>, <span class="number">3</span> =&gt; <span class="number">9</span> &#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="9-2-像-Python-一样简单输出（Jupyter-Notebook）"><a href="#9-2-像-Python-一样简单输出（Jupyter-Notebook）" class="headerlink" title="9.2 像 Python 一样简单输出（Jupyter Notebook）"></a>9.2 像 Python 一样简单输出（Jupyter Notebook）</h4><ul>
+<li><a href="./tool/%E5%83%8FPython%E4%B8%80%E6%A0%B7%E7%8E%A9CC++.md">像 Python 一样玩 C/C++</a></li>
+</ul>
+<h4 id="9-3-观察编译过程变化"><a href="#9-3-观察编译过程变化" class="headerlink" title="9.3 观察编译过程变化"></a>9.3 观察编译过程变化</h4><ul>
+<li> <a target="_blank" rel="noopener" href="https://cppinsights.io/">https://cppinsights.io</a></li>
+</ul>
+<h4 id="9-4-C-的-Debug-工具-dbg-macro"><a href="#9-4-C-的-Debug-工具-dbg-macro" class="headerlink" title="9.4 C++ 的 Debug 工具 dbg-macro"></a>9.4 C++ 的 Debug 工具 dbg-macro</h4><ul>
+<li><a href="./tool/C++%E7%9A%84Debug%E5%B7%A5%E5%85%B7dbg-macro.md">C++ 的 Debug 工具 dbg-macro</a></li>
+</ul>
+<h4 id="9-5-在-Linux-上的-Debug-工具-rr-拥有回到过去的能力"><a href="#9-5-在-Linux-上的-Debug-工具-rr-拥有回到过去的能力" class="headerlink" title="9.5 在 Linux 上的 Debug 工具 rr - 拥有回到过去的能力"></a>9.5 在 Linux 上的 Debug 工具 rr - 拥有回到过去的能力</h4><ul>
+<li><a href="./tool/%E7%94%A8rr%E6%9D%A5%E8%BF%9B%E8%A1%8Cdebug.md">用rr来进行debug</a></li>
+</ul>
+<h3 id="10-拓展部分"><a href="#10-拓展部分" class="headerlink" title="10.拓展部分"></a>10.拓展部分</h3><h4 id="10-1-一些问题"><a href="#10-1-一些问题" class="headerlink" title="10.1 一些问题"></a>10.1 一些问题</h4><ul>
+<li><a href="./extension/some_problem/string_int.md">C++ 中如何将 string 类型转换为 int 类型？</a></li>
+</ul>
+<h3 id="11-贡献者"><a href="#11-贡献者" class="headerlink" title="11.贡献者"></a>11.贡献者</h3><table>
+<thead>
+<tr>
+<th>贡献人</th>
+<th>地址</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>光城</td>
+<td><a target="_blank" rel="noopener" href="https://github.com/Light-City">https://github.com/Light-City</a></td>
+</tr>
+<tr>
+<td>ChungZH</td>
+<td><a target="_blank" rel="noopener" href="https://github.com/ChungZH">https://github.com/ChungZH</a></td>
+</tr>
+<tr>
+<td>xliu79</td>
+<td><a target="_blank" rel="noopener" href="https://github.com/xliu79">https://github.com/xliu79</a></td>
+</tr>
+</tbody></table>
+<h3 id="12-赞助我"><a href="#12-赞助我" class="headerlink" title="12.赞助我"></a>12.赞助我</h3><p>如果觉得不错，赞助我吧~</p>
+<table>
+  <tbody>
+    <tr>
+      <th align="center" style="height=200 width="200">
+          <img src="https://light-city.club/sc/assets/images/alipay.jpg" height="200" width="200" ><br>
+          支付宝
+      </th>
+      <th align="center" style="height=200 width="200">
+          <img src="https://light-city.club/sc/assets/images/wechat.png" height="200" width="200" ><br>
+          微信
+      </th>
+    </tr>
+  </tbody>
+</table>
+
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/C/" rel="tag"># C++</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/06/24/sizeof%20%E9%82%A3%E4%BA%9B%E4%BA%8B/" rel="prev" title="sizeof 那些事">
+      <i class="fa fa-chevron-left"></i> sizeof 那些事
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2021/06/24/Stories%20About%20C%20Plus%20Plus/" rel="next" title="Stories About C Plus Plus">
+      Stories About C Plus Plus <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B3%E4%BA%8E%E4%BD%9C%E8%80%85"><span class="nav-number">1.</span> <span class="nav-text">关于作者</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%A1%B9%E7%9B%AE%E8%BF%90%E8%A1%8C"><span class="nav-number">2.</span> <span class="nav-text">项目运行</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#0-%E9%A1%B9%E7%9B%AE%E6%A6%82%E8%A6%81"><span class="nav-number">3.</span> <span class="nav-text">0.项目概要</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E5%9F%BA%E7%A1%80%E8%BF%9B%E9%98%B6"><span class="nav-number">4.</span> <span class="nav-text">1.基础进阶</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E5%AE%9E%E6%88%98%E7%B3%BB%E5%88%97"><span class="nav-number">5.</span> <span class="nav-text">2.实战系列</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#2-1-10%E6%97%A5%E7%8B%82%E7%BB%83"><span class="nav-number">5.1.</span> <span class="nav-text">2.1 10日狂练</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-2-%E9%87%8D%E7%82%B9%E5%AE%9E%E6%88%98%E7%BB%83%E4%B9%A0"><span class="nav-number">5.2.</span> <span class="nav-text">2.2 重点实战练习</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-C-2-0-%E6%96%B0%E7%89%B9%E6%80%A7"><span class="nav-number">6.</span> <span class="nav-text">3.C++2.0 新特性</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#3-0-%E6%A6%82%E5%86%B5"><span class="nav-number">6.1.</span> <span class="nav-text">3.0 概况</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-1-C-11-%E6%96%B0%E7%89%B9%E6%80%A7"><span class="nav-number">6.2.</span> <span class="nav-text">3.1 C++11 新特性</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-2-C-14-17-20"><span class="nav-number">6.3.</span> <span class="nav-text">3.2 C++14&#x2F;17&#x2F;20</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F"><span class="nav-number">7.</span> <span class="nav-text">4.设计模式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-STL-%E6%BA%90%E7%A0%81%E5%89%96%E6%9E%90"><span class="nav-number">8.</span> <span class="nav-text">5. STL 源码剖析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B"><span class="nav-number">9.</span> <span class="nav-text">6. 并发编程</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#6-1-C-Concurrency-in-Action"><span class="nav-number">9.1.</span> <span class="nav-text">6.1 C++ Concurrency in Action</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#6-2-%E5%A4%9A%E7%BA%BF%E7%A8%8B%E4%B8%8E%E5%A4%9A%E8%BF%9B%E7%A8%8B"><span class="nav-number">9.2.</span> <span class="nav-text">6.2 多线程与多进程</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#6-2-1-Threading-In-C"><span class="nav-number">9.2.1.</span> <span class="nav-text">6.2.1 Threading In C++</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-C-%E6%83%AF%E7%94%A8%E6%B3%95"><span class="nav-number">10.</span> <span class="nav-text">7. C++ 惯用法</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%BD%A0%E6%9C%80%E5%96%9C%E6%AC%A2%E7%9A%84-c-%E7%BC%96%E7%A8%8B%E9%A3%8E%E6%A0%BC%E6%83%AF%E7%94%A8%E6%B3%95%E6%98%AF%E4%BB%80%E4%B9%88"><span class="nav-number">10.0.1.</span> <span class="nav-text">你最喜欢的 c++ 编程风格惯用法是什么?</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#8-%E5%AD%A6%E4%B9%A0%E8%AF%BE%E7%A8%8B"><span class="nav-number">11.</span> <span class="nav-text">8.学习课程</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#8-1-%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4%E3%80%8A%E7%8E%B0%E4%BB%A3-C-%E5%AE%9E%E6%88%98-30-%E8%AE%B2%E3%80%8B"><span class="nav-number">11.1.</span> <span class="nav-text">8.1 极客时间《现代 C++ 实战 30 讲》</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#9-%E5%B7%A5%E5%85%B7%E7%AF%87"><span class="nav-number">12.</span> <span class="nav-text">9.工具篇</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#9-1-%E5%AE%B9%E5%99%A8%E5%BF%AB%E6%8D%B7%E8%BE%93%E5%87%BA%E5%B7%A5%E5%85%B7"><span class="nav-number">12.1.</span> <span class="nav-text">9.1 容器快捷输出工具</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#9-2-%E5%83%8F-Python-%E4%B8%80%E6%A0%B7%E7%AE%80%E5%8D%95%E8%BE%93%E5%87%BA%EF%BC%88Jupyter-Notebook%EF%BC%89"><span class="nav-number">12.2.</span> <span class="nav-text">9.2 像 Python 一样简单输出（Jupyter Notebook）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#9-3-%E8%A7%82%E5%AF%9F%E7%BC%96%E8%AF%91%E8%BF%87%E7%A8%8B%E5%8F%98%E5%8C%96"><span class="nav-number">12.3.</span> <span class="nav-text">9.3 观察编译过程变化</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#9-4-C-%E7%9A%84-Debug-%E5%B7%A5%E5%85%B7-dbg-macro"><span class="nav-number">12.4.</span> <span class="nav-text">9.4 C++ 的 Debug 工具 dbg-macro</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#9-5-%E5%9C%A8-Linux-%E4%B8%8A%E7%9A%84-Debug-%E5%B7%A5%E5%85%B7-rr-%E6%8B%A5%E6%9C%89%E5%9B%9E%E5%88%B0%E8%BF%87%E5%8E%BB%E7%9A%84%E8%83%BD%E5%8A%9B"><span class="nav-number">12.5.</span> <span class="nav-text">9.5 在 Linux 上的 Debug 工具 rr - 拥有回到过去的能力</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#10-%E6%8B%93%E5%B1%95%E9%83%A8%E5%88%86"><span class="nav-number">13.</span> <span class="nav-text">10.拓展部分</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#10-1-%E4%B8%80%E4%BA%9B%E9%97%AE%E9%A2%98"><span class="nav-number">13.1.</span> <span class="nav-text">10.1 一些问题</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#11-%E8%B4%A1%E7%8C%AE%E8%80%85"><span class="nav-number">14.</span> <span class="nav-text">11.贡献者</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#12-%E8%B5%9E%E5%8A%A9%E6%88%91"><span class="nav-number">15.</span> <span class="nav-text">12.赞助我</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">gaoqi</p>
+  <div class="site-description" itemprop="description">冷静</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">97</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">gaoqi</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
