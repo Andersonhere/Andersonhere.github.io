@@ -78,7 +78,7 @@ https://light-city.club/sc/
 -  {% post_link 'CPlusPlusThings/basic_content/union 那些事'  %}
 -  {% post_link 'CPlusPlusThings/basic_content/c 实现 c++ 多态那些事'  %}
 -  {% post_link 'CPlusPlusThings/basic_content/explicit 那些事'  %}
--  {% post_link 'CPlusPlusThings/basic_content/friend 那些事'  %}
+-  {% post_link 'CPlusPlusThings/basic_content/friend/Friend 那些事'  %}
 -  {% post_link 'CPlusPlusThings/basic_content/using 那些事' %}
 -  {% post_link 'CPlusPlusThings/basic_content/:: 那些事'  %}
 -  {% post_link 'CPlusPlusThings/basic_content/enum 那些事'  %}
