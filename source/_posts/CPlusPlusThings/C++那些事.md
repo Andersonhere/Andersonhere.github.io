@@ -4,9 +4,9 @@ date: 2021-06-24 22:28:12
 tags: C++
 ---
 
-- {% post_link ''CPlusPlusThings/Stories About C Plus Plus' 'English version is here' %}
+- {% post_link 'CPlusPlusThings/Stories About C Plus Plus' 'English version is here' %}
 
-
+-  {% post_link 'CPlusPlusThings/c++2.0/c++11/C++11'  %}
 感谢各位对《C++ 那些事》的支持，现将内容也同步至网站，可以打开网站直接阅读~欢迎大家 star、转发、PR。
 
 [直通点](https://light-city.club/sc/)
@@ -66,6 +66,8 @@ https://light-city.club/sc/
 -  {% post_link 'CPlusPlusThings/basic_content/inline/inline 那些事'  %}
 
 -  {% post_link 'CPlusPlusThings/basic_content/sizeof/sizeof 那些事'  %}
+
+
 -  {% post_link 'CPlusPlusThings/basic_content/函数指针那些事'  %}
 -  {% post_link 'CPlusPlusThings/basic_content/纯虚函数和抽象类那些事'  %}
 -  {% post_link 'CPlusPlusThings/basic_content/vptr_vtable 那些事'  %}
