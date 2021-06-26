@@ -152,6 +152,192 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/06/25/variadic/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="gaoqi">
+      <meta itemprop="description" content="冷静">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Andersonhere">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/06/25/variadic/" class="post-title-link" itemprop="url">Variadic Templates</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2021-06-25 22:28:14" itemprop="dateCreated datePublished" datetime="2021-06-25T22:28:14+08:00">2021-06-25</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-06-26 10:14:28" itemprop="dateModified" datetime="2021-06-26T10:14:28+08:00">2021-06-26</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="comment">// Created by light on 19-11-2.</span></span><br><span class="line"><span class="comment">//</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// variadic template(c++11) 数量不定的模板参数</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;vector&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;tuple&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"><span class="comment">// 参数个数  参数个数逐一递减</span></span><br><span class="line"><span class="comment">// 参数类型  参数类型也逐一递减</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// (3)</span></span><br><span class="line"><span class="comment">// 需要重载一个终止函数</span></span><br><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="keyword">void</span> _hash(<span class="keyword">size_t</span> &amp;seed, <span class="keyword">const</span> T &amp;val) &#123;</span><br><span class="line">    cout &lt;&lt; <span class="string">&quot;hash over &quot;</span> &lt;&lt; val &lt;&lt; endl;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// (2)</span></span><br><span class="line"><span class="comment">// 展开函数, 把参数分为一个普通参数和一个参数包，调用一次，参数包大小就减一</span></span><br><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T,<span class="keyword">typename</span>... Args&gt;</span><br><span class="line"><span class="keyword">void</span> _hash(<span class="keyword">size_t</span> &amp;seed, <span class="keyword">const</span> T&amp; val,<span class="keyword">const</span> Args &amp;... args) &#123;</span><br><span class="line">    cout &lt;&lt; <span class="string">&quot;parameter &quot;</span> &lt;&lt; val&lt;&lt; endl;</span><br><span class="line">    <span class="comment">// 递归调用自己</span></span><br><span class="line">    _hash(seed, args...);       <span class="comment">// 上面如果不给T参数,会自己调用自己成死循环</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">// 泛化版 (1)</span></span><br><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> ...Args&gt;</span><br><span class="line"><span class="keyword">size_t</span> _hash(<span class="keyword">const</span> Args &amp;... args) &#123;</span><br><span class="line">    cout &lt;&lt; <span class="string">&quot;hash start &quot;</span> &lt;&lt; endl;</span><br><span class="line">    <span class="keyword">size_t</span> seed = <span class="number">10</span>;</span><br><span class="line">    <span class="comment">// 递归调用自己</span></span><br><span class="line">    _hash(seed, args...);</span><br><span class="line">    <span class="keyword">return</span> seed;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> ...Args&gt;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">A</span> &#123;</span></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="keyword">int</span> size = <span class="number">0</span>;    <span class="comment">// c++11 支持类内初始化</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">A</span>() &#123;</span><br><span class="line">        size = <span class="keyword">sizeof</span>...(Args);</span><br><span class="line">        cout &lt;&lt; size &lt;&lt; endl;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">void</span>)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">size_t</span> f = <span class="number">10</span>;</span><br><span class="line">    _hash(<span class="string">&quot;asdas&quot;</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>);</span><br><span class="line">    A&lt;<span class="keyword">int</span>, string, vector&lt;<span class="keyword">int</span>&gt;&gt; a;    <span class="comment">// 类型任意</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// Tuple就是利用这个特性(变长参数模板)</span></span><br><span class="line">    tuple&lt;<span class="keyword">int</span>, string&gt; t = <span class="built_in">make_tuple</span>(<span class="number">1</span>, <span class="string">&quot;hha&quot;</span>);</span><br><span class="line">    <span class="keyword">int</span> firstArg = get&lt;<span class="number">0</span>&gt;(t);</span><br><span class="line">    string secondArg = get&lt;<span class="number">1</span>&gt;(t);</span><br><span class="line">    cout &lt;&lt; firstArg &lt;&lt; <span class="string">&quot; &quot;</span> &lt;&lt; secondArg &lt;&lt; endl;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/06/25/C++11/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="gaoqi">
+      <meta itemprop="description" content="冷静">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Andersonhere">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/06/25/C++11/" class="post-title-link" itemprop="url">C++ 11</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2021-06-25 22:28:12" itemprop="dateCreated datePublished" datetime="2021-06-25T22:28:12+08:00">2021-06-25</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-06-26 10:15:10" itemprop="dateModified" datetime="2021-06-26T10:15:10+08:00">2021-06-26</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="C-新特性"><a href="#C-新特性" class="headerlink" title="C++新特性"></a>C++新特性</h1><h2 id="1-C-11新特性"><a href="#1-C-11新特性" class="headerlink" title="1.C++11新特性"></a>1.<a href="./c++2.0/c++11">C++11新特性</a></h2><ul>
+<li><p><a href="./c++2.0/variadic">Variadic Templates</a></p>
+</li>
+<li> <a href="/2021/06/25/variadic/" title="Variadic Templates">Variadic Templates</a></li>
+<li><p>Spaces in Template Expressions</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">vector&lt;list&lt;<span class="keyword">int</span>&gt; &gt; <span class="comment">//ok in each C++ version</span></span><br><span class="line">vector&lt;list&lt;<span class="keyword">int</span>&gt;&gt; <span class="comment">// before c++ 11 error error: ‘&gt;&gt;’ should be ‘&gt; &gt;’ within a nested template argument list,c++11后可以正常通过</span></span><br></pre></td></tr></table></figure></li>
+<li><p><a href="./c++2.0/nullptr.cpp">nullptr and nullptr_t</a></p>
+</li>
+<li><p><a href="./c++2.0/auto.cpp">Automatic Type Deduction with auto</a></p>
+</li>
+<li><p><a href="./c++2.0/uniform_initialization.cpp">Uniform Initialization </a></p>
+</li>
+<li><p><a href="./c++2.0/initializer.cpp">initializer_list</a></p>
+</li>
+<li><p><a href="./c++2.0/explicit.cpp">explicit for ctors taking more than one argument</a></p>
+</li>
+<li><p><a href="./c++2.0/auto.cpp">range-based for statement</a></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span>(decl:col) &#123;</span><br><span class="line">    statement</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li><p><a href="./c++2.0/default_delete.cpp">=default,=delete</a></p>
+<p>如果你自行定义了一个ctor,那么编译器就不会给你一个default ctor<br>如果强制加上=default,就可以重新获得并使用default ctor.</p>
+</li>
+<li><p>Alias(化名)Template(template typedef)</p>
+<ul>
+<li><a href="./c++2.0/alias.cpp">alias.cpp</a> </li>
+<li><a href="./c++2.0/template_template.cpp">template_template.cpp</a></li>
+</ul>
+</li>
+<li><p><a href="./c++2.0/template_template.cpp">template template parameter</a></p>
+</li>
+<li><p><a href="./c++2.0/type_alias.cpp">type alias</a></p>
+</li>
+<li><p><a href="./c++2.0/noexcept.cpp">noexcept</a></p>
+</li>
+<li><p><a href="./c++2.0/override.cpp">override</a></p>
+</li>
+<li><p><a href="./c++2.0/final.cpp">final</a></p>
+</li>
+<li><p><a href="./c++2.0/decltype.cpp">decltype</a></p>
+</li>
+<li><p><a href="./c++2.0/lambda.cpp">lambda</a></p>
+</li>
+<li><p><a href="./c++2.0/rvalue.cpp">Rvalue reference</a></p>
+</li>
+<li><p><a href="./c++2.0/move.cpp">move aware class</a></p>
+</li>
+<li><p>容器-结构与分类</p>
+<ul>
+<li>(1) 序列式容器包括：array(C++2.0新引入),vector,deque,list,forward_list(C++2.0新引入)</li>
+<li>(2) 关联式容器包括：set/multiset,map/multimap</li>
+<li>(3) 无序容器(C++2.0新引入,更换原先hash_xxx为unordered_xxx)包括：unordered_map/unordered_multimap,unordered_set/unordered_multiset</li>
+</ul>
+</li>
+<li><p><a href="./c++2.0/hash.cpp">Hash Function</a></p>
+</li>
+<li><p><a href="./c++2.0/tuple.cpp">tuple</a></p>
+<p>学习资料：<a target="_blank" rel="noopener" href="https://www.bilibili.com/video/av51863195?from=search&amp;seid=3610634846288253061">https://www.bilibili.com/video/av51863195?from=search&amp;seid=3610634846288253061</a></p>
+</li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-Hans">
     <link itemprop="mainEntityOfPage" href="http://example.com/2021/06/24/C++%E7%9A%84Debug%E5%B7%A5%E5%85%B7dbg-macro/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -5687,226 +5873,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-Hans">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/06/24/README/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="gaoqi">
-      <meta itemprop="description" content="冷静">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Andersonhere">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/06/24/README/" class="post-title-link" itemprop="url">Untitled</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2021-06-24 23:35:06" itemprop="dateCreated datePublished" datetime="2021-06-24T23:35:06+08:00">2021-06-24</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-06-16 22:21:57" itemprop="dateModified" datetime="2021-06-16T22:21:57+08:00">2021-06-16</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="extern-“C”"><a href="#extern-“C”" class="headerlink" title="extern “C”"></a>extern “C”</h1><h2 id="About-Author："><a href="#About-Author：" class="headerlink" title="About Author："></a>About Author：</h2><p><img src="../img/wechat.jpg"></p>
-<h2 id="1-Compiler-difference-between-C-and-C"><a href="#1-Compiler-difference-between-C-and-C" class="headerlink" title="1. Compiler difference between C and C ++"></a>1. Compiler difference between C and C ++</h2><p>In C + +, we often see extern “C” modifier function in the header file. What’s the effect. Is a function defined in C language module for C + + link.</p>
-<p>Although C + + is compatible with C, the symbols generated by function compilation in C + + files are different from those generated by C language.Because C + + supports function overloading, the symbols generated by C + + function compilation have the information of function parameter type, while C does not.</p>
-<p>Take <code>int add(int a, int b)</code> for example. The C + + compiler generates the. O file, <code>add</code> becomes <code>add_int_int</code> and so on, while C would be like this <code>_add</code>, that is：For the same function, in C and C + +, the symbols generated after compilation are different.</p>
-<p>This leads to a problem: if the function implemented in C + + is implemented in C language, an error will occur when compiling the link, indicating that the corresponding symbol cannot be found. At this time<code>extern &quot;C&quot;</code> works：Tell the linker to find its <code>_ C </code>language symbols such as <code>add</code> are not modified by C ++.</p>
-<h2 id="2-C-calls-C-functions"><a href="#2-C-calls-C-functions" class="headerlink" title="2.C ++ calls C functions"></a>2.C ++ calls C functions</h2><p>When referring to the header file of C, you need to add <code>extern &quot;C&quot;</code></p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//add.h</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">ifndef</span> ADD_H</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> ADD_H</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">add</span><span class="params">(<span class="keyword">int</span> x,<span class="keyword">int</span> y)</span></span>;</span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">//add.c</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&quot;add.h&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">add</span><span class="params">(<span class="keyword">int</span> x,<span class="keyword">int</span> y)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> x+y;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//add.cpp</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&quot;add.h&quot;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="built_in">add</span>(<span class="number">2</span>,<span class="number">3</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>Compile：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">//Generate add.o file</span><br><span class="line">gcc -c add.c</span><br></pre></td></tr></table></figure>
-
-<p>Link：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">g++ add.cpp add.o -o main</span><br></pre></td></tr></table></figure>
-
-<p>Without extern “C”：</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&gt; g++ add.cpp add.o -o main                                   </span><br><span class="line">add.o：在函数‘main’中：</span><br><span class="line">add.cpp:(.text+<span class="number">0x0</span>): `main<span class="number">&#x27;</span>被多次定义</span><br><span class="line">/tmp/ccH65yQF.o:add.cpp:(.text+<span class="number">0x0</span>)：第一次在此定义</span><br><span class="line">/tmp/ccH65yQF.o：在函数‘main’中：</span><br><span class="line">add.cpp:(.text+<span class="number">0xf</span>)：对‘<span class="built_in">add</span>(<span class="keyword">int</span>, <span class="keyword">int</span>)’未定义的引用</span><br><span class="line">add.o：在函数‘main’中：</span><br><span class="line">add.cpp:(.text+<span class="number">0xf</span>)：对‘<span class="built_in">add</span>(<span class="keyword">int</span>, <span class="keyword">int</span>)’未定义的引用</span><br><span class="line">collect2: error: ld returned <span class="number">1</span> exit status</span><br></pre></td></tr></table></figure>
-
-<p>With extern “C”：</p>
-<p><code>add.cpp</code></p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"><span class="keyword">extern</span> <span class="string">&quot;C&quot;</span> &#123;</span><br><span class="line">    <span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&quot;add.h&quot;</span></span></span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="built_in">add</span>(<span class="number">2</span>,<span class="number">3</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>When compiling, you must pay attention to generating intermediate files add.o through GCC</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gcc -c add.c </span><br></pre></td></tr></table></figure>
-
-<p>Compile：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">g++ add.cpp add.o -o main</span><br></pre></td></tr></table></figure>
-
-<p>Code：</p>
-<ul>
-<li><p><a href="extern_c++/add.h">add.h</a></p>
-</li>
-<li><p><a href="extern_c++/add.c">add.c</a></p>
-</li>
-<li><p><a href="extern_c++/add.cpp">add.cpp</a></p>
-</li>
-</ul>
-<h2 id="2-Calling-C-function-in-C"><a href="#2-Calling-C-function-in-C" class="headerlink" title="2.Calling C++ function in C"></a>2.Calling C++ function in C</h2><p><code>extern &quot;C&quot;</code> It is a syntax error in C, which needs to be put in the C + + header file.</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// add.h</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">ifndef</span> ADD_H</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> ADD_H</span></span><br><span class="line"><span class="keyword">extern</span> <span class="string">&quot;C&quot;</span> &#123;</span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">add</span><span class="params">(<span class="keyword">int</span> x,<span class="keyword">int</span> y)</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">// add.cpp</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&quot;add.h&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">add</span><span class="params">(<span class="keyword">int</span> x,<span class="keyword">int</span> y)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> x+y;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// add.c</span></span><br><span class="line"><span class="function"><span class="keyword">extern</span> <span class="keyword">int</span> <span class="title">add</span><span class="params">(<span class="keyword">int</span> x,<span class="keyword">int</span> y)</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    add(<span class="number">2</span>,<span class="number">3</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>Compile：</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">g++ -c add.cpp</span><br></pre></td></tr></table></figure>
-
-<p>Link：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gcc add.c add.o -o main</span><br></pre></td></tr></table></figure>
-
-<p>Code：</p>
-<ul>
-<li><p><a href="extern_c/add.h">add.h</a></p>
-</li>
-<li><p><a href="extern_c/add.c">add.c</a></p>
-</li>
-<li><p><a href="extern_c/add.cpp">add.cpp</a></p>
-</li>
-</ul>
-<p>In the header file of C language, the external function can only be specified as extern type. The declaration of extern “C” is not supported in C language. There will be compiler syntax error when the. C file contains extern “C”. Therefore, the use of external “C” is all placed in CPP program related files or its header files.</p>
-<p>The following forms are summarized:</p>
-<p>（1）C + + calls C functions:</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//xx.h</span></span><br><span class="line"><span class="function"><span class="keyword">extern</span> <span class="keyword">int</span> <span class="title">add</span><span class="params">(...)</span></span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function"><span class="comment">//xx.c</span></span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">add</span><span class="params">()</span></span>&#123;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//xx.cpp</span></span><br><span class="line"><span class="keyword">extern</span> <span class="string">&quot;C&quot;</span> &#123;</span><br><span class="line">    <span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&quot;xx.h&quot;</span></span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>（2）C calls C + + functions</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//xx.h</span></span><br><span class="line"><span class="keyword">extern</span> <span class="string">&quot;C&quot;</span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">add</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//xx.cpp</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">add</span><span class="params">()</span></span>&#123;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//xx.c</span></span><br><span class="line"><span class="function"><span class="keyword">extern</span> <span class="keyword">int</span> <span class="title">add</span><span class="params">()</span></span>;</span><br></pre></td></tr></table></figure>
-
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-Hans">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/06/24/README/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="gaoqi">
-      <meta itemprop="description" content="冷静">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Andersonhere">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/06/24/README/" class="post-title-link" itemprop="url">Untitled</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2021-06-24 23:35:06" itemprop="dateCreated datePublished" datetime="2021-06-24T23:35:06+08:00">2021-06-24</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-06-16 22:21:57" itemprop="dateModified" datetime="2021-06-16T22:21:57+08:00">2021-06-16</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="Friend-and-Friend-Class"><a href="#Friend-and-Friend-Class" class="headerlink" title="Friend and Friend Class"></a>Friend and Friend Class</h1><h2 id="About-Author："><a href="#About-Author：" class="headerlink" title="About Author："></a>About Author：</h2><p><img src="../img/wechat.jpg"></p>
-<h2 id="0-Summary"><a href="#0-Summary" class="headerlink" title="0.Summary"></a>0.Summary</h2><p>Friends provide a mechanism for ordinary functions or class member functions to access private or protected members in another class.In other words, there are two forms of friends:</p>
-<p>（1）Friend Function：Ordinary functions access a private or protected member of a class.</p>
-<p>（2）Friend Class：Member functions in class a access private or protected members in class B</p>
-<p>Advantages: improve the efficiency of the program.</p>
-<p>Disadvantages: it destroys the encapsulation of classes and the transparency of data.<br>Conclusion：</p>
-<ul>
-<li>Access to private members</li>
-<li>Breaking encapsulation</li>
-<li>Friendship is not transitive</li>
-<li>The unidirectionality of friend relationship</li>
-<li>There are no restrictions on the form and number of friend declarations</li>
-</ul>
-<h2 id="1-Friend-function"><a href="#1-Friend-function" class="headerlink" title="1.Friend function"></a>1.Friend function</h2><p>It is declared in any region of the class declaration, and the definition is outside the class.</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">friend &lt;type&gt;&lt;name&gt;(&lt;Parameter table&gt;);</span><br></pre></td></tr></table></figure>
-
-<p>Note that the friend function is only a common function, not a class member function of this class. It can be called anywhere. In the friend function, private or protected members of the class can be accessed through the object name.</p>
-<p>Code：<a href="friend_func.cpp">friend_func.cpp</a></p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">A</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">A</span>(<span class="keyword">int</span> _a):<span class="built_in">a</span>(_a)&#123;&#125;;</span><br><span class="line">    <span class="function"><span class="keyword">friend</span> <span class="keyword">int</span> <span class="title">geta</span><span class="params">(A &amp;ca)</span></span>;  <span class="comment">///&lt; Friend function</span></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="keyword">int</span> a;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">geta</span><span class="params">(A &amp;ca)</span> </span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> ca.a;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="function">A <span class="title">a</span><span class="params">(<span class="number">3</span>)</span></span>;    </span><br><span class="line">    cout&lt;&lt;<span class="built_in">geta</span>(a)&lt;&lt;endl;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="2-Friend-Class"><a href="#2-Friend-Class" class="headerlink" title="2.Friend Class"></a>2.Friend Class</h2><p>The declaration of a friend class is in the declaration of the class, and the implementation is outside the class.</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">friend class &lt;friend class name&gt;;</span><br></pre></td></tr></table></figure>
-
-<p>Class B is a friend of class A, so class B can directly access private members of A.<br>Code：<a href="friend_class.cpp">friend_class.cpp</a></p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">A</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">A</span>(<span class="keyword">int</span> _a):<span class="built_in">a</span>(_a)&#123;&#125;;</span><br><span class="line">    <span class="keyword">friend</span> <span class="class"><span class="keyword">class</span> <span class="title">B</span>;</span></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="keyword">int</span> a;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">B</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">getb</span><span class="params">(A ca)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span>  ca.a; </span><br><span class="line">    &#125;;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="function">A <span class="title">a</span><span class="params">(<span class="number">3</span>)</span></span>;</span><br><span class="line">    B b;</span><br><span class="line">    cout&lt;&lt;b.<span class="built_in">getb</span>(a)&lt;&lt;endl;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-<h2 id="3-Attention"><a href="#3-Attention" class="headerlink" title="3.Attention"></a>3.Attention</h2><ul>
-<li>Friendship has no inheritance<br>If class B is a friend of class A and class C inherits from Class A, then friend class B cannot directly access private or protected members of class C.</li>
-<li>Friendship is not transitive<br>If class B is a friend of class A and class C is a friend of class B, then friend class C cannot directly access private or protected members of class A, that is, there is no such relationship as “friend of friend”.</li>
-</ul>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -5976,14 +5942,14 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">97</span>
+          <span class="site-state-item-count">98</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-count">10</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>

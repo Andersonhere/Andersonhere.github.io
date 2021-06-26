@@ -20,21 +20,21 @@
     var CONFIG = {"hostname":"example.com","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="C++中如何将string类型转换为int类型？个人公众号：  首先提出解决方案：  atoi strtol stoi  这几个有什么不同呢？下面测试对比。  C语言风格函数  atoi与strtol对比： 123string str &#x3D; &quot;16s&quot;;int a &#x3D; atoi(str.c_str());int b &#x3D; strtol(str.c_str(), nullptr, 1">
+  <meta name="description" content="C++新特性1.C++11新特性 Variadic Templates   Variadic Templates Spaces in Template Expressions 12vector&lt;list&lt;int&gt; &gt; &#x2F;&#x2F;ok in each C++ versionvector&lt;list&lt;int&gt;&gt; &#x2F;&#x2F; before c++ 11 error er">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Andersonhere">
-<meta property="og:url" content="http://example.com/2021/06/24/string_int/index.html">
+<meta property="og:title" content="C++ 11">
+<meta property="og:url" content="http://example.com/2021/06/25/C++11/index.html">
 <meta property="og:site_name" content="Andersonhere">
-<meta property="og:description" content="C++中如何将string类型转换为int类型？个人公众号：  首先提出解决方案：  atoi strtol stoi  这几个有什么不同呢？下面测试对比。  C语言风格函数  atoi与strtol对比： 123string str &#x3D; &quot;16s&quot;;int a &#x3D; atoi(str.c_str());int b &#x3D; strtol(str.c_str(), nullptr, 1">
+<meta property="og:description" content="C++新特性1.C++11新特性 Variadic Templates   Variadic Templates Spaces in Template Expressions 12vector&lt;list&lt;int&gt; &gt; &#x2F;&#x2F;ok in each C++ versionvector&lt;list&lt;int&gt;&gt; &#x2F;&#x2F; before c++ 11 error er">
 <meta property="og:locale">
-<meta property="og:image" content="http://example.com/2021/06/24/img/wechat.jpg">
-<meta property="article:published_time" content="2021-06-24T15:35:06.727Z">
-<meta property="article:modified_time" content="2021-06-16T14:21:57.377Z">
+<meta property="article:published_time" content="2021-06-25T14:28:12.000Z">
+<meta property="article:modified_time" content="2021-06-26T02:15:10.181Z">
 <meta property="article:author" content="gaoqi">
+<meta property="article:tag" content="C++">
+<meta property="article:tag" content="C++11">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://example.com/2021/06/24/img/wechat.jpg">
 
-<link rel="canonical" href="http://example.com/2021/06/24/string_int/">
+<link rel="canonical" href="http://example.com/2021/06/25/C++11/">
 
 
 <script id="page-configurations">
@@ -47,7 +47,7 @@
   };
 </script>
 
-  <title> | Andersonhere</title>
+  <title>C++ 11 | Andersonhere</title>
   
 
 
@@ -157,7 +157,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-Hans">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/06/24/string_int/">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/06/25/C++11/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -170,7 +170,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          
+          C++ 11
         </h1>
 
         <div class="post-meta">
@@ -180,14 +180,14 @@
               </span>
               <span class="post-meta-item-text">Posted on</span>
 
-              <time title="Created: 2021-06-24 23:35:06" itemprop="dateCreated datePublished" datetime="2021-06-24T23:35:06+08:00">2021-06-24</time>
+              <time title="Created: 2021-06-25 22:28:12" itemprop="dateCreated datePublished" datetime="2021-06-25T22:28:12+08:00">2021-06-25</time>
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-06-16 22:21:57" itemprop="dateModified" datetime="2021-06-16T22:21:57+08:00">2021-06-16</time>
+                <time title="Modified: 2021-06-26 10:15:10" itemprop="dateModified" datetime="2021-06-26T10:15:10+08:00">2021-06-26</time>
               </span>
 
           
@@ -201,52 +201,65 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h1 id="C-中如何将string类型转换为int类型？"><a href="#C-中如何将string类型转换为int类型？" class="headerlink" title="C++中如何将string类型转换为int类型？"></a>C++中如何将string类型转换为int类型？</h1><p>个人公众号：</p>
-<p><img src="../img/wechat.jpg"></p>
-<p>首先提出解决方案：</p>
+        <h1 id="C-新特性"><a href="#C-新特性" class="headerlink" title="C++新特性"></a>C++新特性</h1><h2 id="1-C-11新特性"><a href="#1-C-11新特性" class="headerlink" title="1.C++11新特性"></a>1.<a href="./c++2.0/c++11">C++11新特性</a></h2><ul>
+<li><p><a href="./c++2.0/variadic">Variadic Templates</a></p>
+</li>
+<li> <a href="/2021/06/25/variadic/" title="Variadic Templates">Variadic Templates</a></li>
+<li><p>Spaces in Template Expressions</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">vector&lt;list&lt;<span class="keyword">int</span>&gt; &gt; <span class="comment">//ok in each C++ version</span></span><br><span class="line">vector&lt;list&lt;<span class="keyword">int</span>&gt;&gt; <span class="comment">// before c++ 11 error error: ‘&gt;&gt;’ should be ‘&gt; &gt;’ within a nested template argument list,c++11后可以正常通过</span></span><br></pre></td></tr></table></figure></li>
+<li><p><a href="./c++2.0/nullptr.cpp">nullptr and nullptr_t</a></p>
+</li>
+<li><p><a href="./c++2.0/auto.cpp">Automatic Type Deduction with auto</a></p>
+</li>
+<li><p><a href="./c++2.0/uniform_initialization.cpp">Uniform Initialization </a></p>
+</li>
+<li><p><a href="./c++2.0/initializer.cpp">initializer_list</a></p>
+</li>
+<li><p><a href="./c++2.0/explicit.cpp">explicit for ctors taking more than one argument</a></p>
+</li>
+<li><p><a href="./c++2.0/auto.cpp">range-based for statement</a></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span>(decl:col) &#123;</span><br><span class="line">    statement</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li><p><a href="./c++2.0/default_delete.cpp">=default,=delete</a></p>
+<p>如果你自行定义了一个ctor,那么编译器就不会给你一个default ctor<br>如果强制加上=default,就可以重新获得并使用default ctor.</p>
+</li>
+<li><p>Alias(化名)Template(template typedef)</p>
 <ul>
-<li>atoi</li>
-<li>strtol</li>
-<li>stoi</li>
+<li><a href="./c++2.0/alias.cpp">alias.cpp</a> </li>
+<li><a href="./c++2.0/template_template.cpp">template_template.cpp</a></li>
 </ul>
-<p>这几个有什么不同呢？下面测试对比。</p>
-<blockquote>
-<p>C语言风格函数</p>
-</blockquote>
-<p>atoi与strtol对比：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">string str = <span class="string">&quot;16s&quot;</span>;</span><br><span class="line"><span class="keyword">int</span> a = <span class="built_in">atoi</span>(str.<span class="built_in">c_str</span>());</span><br><span class="line"><span class="keyword">int</span> b = <span class="built_in">strtol</span>(str.<span class="built_in">c_str</span>(), <span class="literal">nullptr</span>, <span class="number">10</span>);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><a href="./c++2.0/template_template.cpp">template template parameter</a></p>
+</li>
+<li><p><a href="./c++2.0/type_alias.cpp">type alias</a></p>
+</li>
+<li><p><a href="./c++2.0/noexcept.cpp">noexcept</a></p>
+</li>
+<li><p><a href="./c++2.0/override.cpp">override</a></p>
+</li>
+<li><p><a href="./c++2.0/final.cpp">final</a></p>
+</li>
+<li><p><a href="./c++2.0/decltype.cpp">decltype</a></p>
+</li>
+<li><p><a href="./c++2.0/lambda.cpp">lambda</a></p>
+</li>
+<li><p><a href="./c++2.0/rvalue.cpp">Rvalue reference</a></p>
+</li>
+<li><p><a href="./c++2.0/move.cpp">move aware class</a></p>
+</li>
+<li><p>容器-结构与分类</p>
+<ul>
+<li>(1) 序列式容器包括：array(C++2.0新引入),vector,deque,list,forward_list(C++2.0新引入)</li>
+<li>(2) 关联式容器包括：set/multiset,map/multimap</li>
+<li>(3) 无序容器(C++2.0新引入,更换原先hash_xxx为unordered_xxx)包括：unordered_map/unordered_multimap,unordered_set/unordered_multiset</li>
+</ul>
+</li>
+<li><p><a href="./c++2.0/hash.cpp">Hash Function</a></p>
+</li>
+<li><p><a href="./c++2.0/tuple.cpp">tuple</a></p>
+<p>学习资料：<a target="_blank" rel="noopener" href="https://www.bilibili.com/video/av51863195?from=search&amp;seid=3610634846288253061">https://www.bilibili.com/video/av51863195?from=search&amp;seid=3610634846288253061</a></p>
+</li>
+</ul>
 
-<p>输出：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">atoi的结果为:16</span><br><span class="line">strtol的结果为:16</span><br></pre></td></tr></table></figure>
-
-<p>这两个函数都是从字符串开始寻找数字或者正负号或者小数点,遇到非法字符终止。</p>
-<p>所以到上述s字符就不输出了，提前结束，也就是说当你的字符串不是数字的时候，或者小数点等非数字，不会报异常！直接输出0.</p>
-<p>例如：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">string str = <span class="string">&quot;asdsa&quot;</span>;</span><br><span class="line"><span class="keyword">int</span> a = <span class="built_in">atoi</span>(str.<span class="built_in">c_str</span>());</span><br><span class="line"><span class="keyword">int</span> b = <span class="built_in">strtol</span>(str.<span class="built_in">c_str</span>(), <span class="literal">nullptr</span>, <span class="number">10</span>);</span><br></pre></td></tr></table></figure>
-
-<p>输出：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">0</span><br><span class="line">0</span><br></pre></td></tr></table></figure>
-
-<p>strtol相比与atoi来说，支持多种进制转换,例如8进制等</p>
-<p>例如：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">int b = strtol(str.c_str(), nullptr, 8);</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>C++风格</p>
-</blockquote>
-<p>在C++中可以使用stoi来转int，这个函数相比于前两个一个最大特点是：异常！</p>
-<p>我们知道C++相比于C语言多了异常，这也是这个函数在C++中具有的最显著功能。</p>
-<p>例如：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">string str1 = <span class="string">&quot;asq,&quot;</span>;</span><br><span class="line"><span class="comment">//    int c = stoi(str1);    // 报异常</span></span><br><span class="line">string str2 = <span class="string">&quot;12312&quot;</span>;</span><br><span class="line"><span class="keyword">int</span> c = <span class="built_in">stoi</span>(str2);     <span class="comment">// ok</span></span><br><span class="line">cout &lt;&lt; c &lt;&lt; endl;</span><br></pre></td></tr></table></figure>
-
-<p>异常如下：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">terminate called after throwing an instance of &#x27;std::invalid_argument&#x27;</span><br><span class="line">what():  stoi</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>自定义</p>
-</blockquote>
-<p>也就是自己写呗，如下：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">stringToInt</span><span class="params">(<span class="keyword">const</span> string &amp;s)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> v;</span><br><span class="line">    stringstream ss;</span><br><span class="line">    ss &lt;&lt; s;</span><br><span class="line">    ss &gt;&gt; v;</span><br><span class="line">    <span class="keyword">return</span> v;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> i = <span class="built_in">stringToInt</span>(<span class="string">&quot;2.3&quot;</span>);</span><br><span class="line">    cout&lt;&lt;i&lt;&lt;endl;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
     </div>
 
     
@@ -254,6 +267,10 @@
     
 
       <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/C/" rel="tag"># C++</a>
+              <a href="/tags/C-11/" rel="tag"># C++11</a>
+          </div>
 
         
 
@@ -261,12 +278,12 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2021/06/24/README/" rel="prev" title="">
+    <a href="/2021/06/24/C++%E7%9A%84Debug%E5%B7%A5%E5%85%B7dbg-macro/" rel="prev" title="">
       <i class="fa fa-chevron-left"></i> 
     </a></div>
       <div class="post-nav-item">
-    <a href="/2021/06/24/README/" rel="next" title="">
-       <i class="fa fa-chevron-right"></i>
+    <a href="/2021/06/25/variadic/" rel="next" title="Variadic Templates">
+      Variadic Templates <i class="fa fa-chevron-right"></i>
     </a></div>
     </div>
       </footer>
@@ -326,7 +343,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#C-%E4%B8%AD%E5%A6%82%E4%BD%95%E5%B0%86string%E7%B1%BB%E5%9E%8B%E8%BD%AC%E6%8D%A2%E4%B8%BAint%E7%B1%BB%E5%9E%8B%EF%BC%9F"><span class="nav-number">1.</span> <span class="nav-text">C++中如何将string类型转换为int类型？</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#C-%E6%96%B0%E7%89%B9%E6%80%A7"><span class="nav-number">1.</span> <span class="nav-text">C++新特性</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-C-11%E6%96%B0%E7%89%B9%E6%80%A7"><span class="nav-number">1.1.</span> <span class="nav-text">1.C++11新特性</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
