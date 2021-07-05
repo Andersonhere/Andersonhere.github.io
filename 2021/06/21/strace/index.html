@@ -28,7 +28,7 @@
 <meta property="og:description" content="strace参数列表 strace常用参数  -c 统计每一系统调用的所执行的时间,次数和出错的次数等.-d 输出strace关于标准错误的调试信息.-f 跟踪由fork调用所产生的子进程.-ff 如果提供-o filename,则所有进程的跟踪结果输出到相应的filename.pid中,pid是各进程的进程号.-F 尝试跟踪vfork调用.在-f时,vfork不被跟踪.-h 输出简要的帮助信息.">
 <meta property="og:locale">
 <meta property="article:published_time" content="2021-06-21T15:36:21.000Z">
-<meta property="article:modified_time" content="2021-07-05T13:34:32.580Z">
+<meta property="article:modified_time" content="2021-07-05T13:37:31.003Z">
 <meta property="article:author" content="gaoqi">
 <meta property="article:tag" content="linux">
 <meta property="article:tag" content="strace">
@@ -187,7 +187,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-07-05 21:34:32" itemprop="dateModified" datetime="2021-07-05T21:34:32+08:00">2021-07-05</time>
+                <time title="Modified: 2021-07-05 21:37:31" itemprop="dateModified" datetime="2021-07-05T21:37:31+08:00">2021-07-05</time>
               </span>
 
           
@@ -204,7 +204,9 @@
         <h2 id="strace参数列表"><a href="#strace参数列表" class="headerlink" title="strace参数列表"></a>strace参数列表</h2><ul>
 <li>strace常用参数</li>
 </ul>
-<p>-c 统计每一系统调用的所执行的时间,次数和出错的次数等.<br>-d 输出strace关于标准错误的调试信息.<br><font color=#FF0000 >-f 跟踪由fork调用所产生的子进程.</font><br>-ff 如果提供-o filename,则所有进程的跟踪结果输出到相应的filename.pid中,pid是各进程的进程号.<br>-F 尝试跟踪vfork调用.在-f时,vfork不被跟踪.<br>-h 输出简要的帮助信息.<br>-i 输出系统调用的入口指针.<br>-q 禁止输出关于脱离的消息.<br>-r 打印出相对时间关于,每一个系统调用.<br><font color=#FF0000 >-t 在输出中的每一行前加上时间信息.<br>-tt 在输出中的每一行前加上时间信息,微秒级.<br>-ttt 微秒级输出,以秒了表示时间.<br>-T 显示每一调用所耗的时间.</font><br>-v 输出所有的系统调用.一些调用关于环境变量,状态,输入输出等调用由于使用频繁,默认不输出.<br>-V 输出strace的版本信息.<br>-x 以十六进制形式输出非标准字符串<br>-xx 所有字符串以十六进制形式输出.<br>-a column 设置返回值的输出位置.默认 为40.<br><font color=#FF0000 >-e expr 指定一个表达式,用来控制如何跟踪.格式如下:<br>[qualifier=][!]value1[,value2]…<br>qualifier只能是 trace,abbrev,verbose,raw,signal,read,write其中之一.value是用来限定的符号或数字.默认的 qualifier是 trace.感叹号是否定符号.例如:<br>-eopen等价于 -e trace=open,表示只跟踪open调用.而-etrace!=open表示跟踪除了open以外的其他调用.有两个特殊的符号 all 和 none.</font><br><font color=#FF00FF >注意有些shell使用!来执行历史记录里的命令,所以要使用.</font><br>-e trace=set 只跟踪指定的系统 调用.例如:-e trace=open,close,rean,write表示只跟踪这四个系统调用.默认的为set=all.<br>-e trace=file 只跟踪有关文件操作的系统调用.<br>-e trace=process 只跟踪有关进程控制的系统调用.<br>-e trace=network 跟踪与网络有关的所有系统调用.<br>-e strace=signal 跟踪所有与系统信号有关的 系统调用<br>-e trace=ipc 跟踪所有与进程通讯有关的系统调用<br>-e abbrev=set 设定 strace输出的系统调用的结果集.-v 等与 abbrev=none.默认为abbrev=all.<br>-e raw=set 将指 定的系统调用的参数以十六进制显示.<br>-e signal=set 指定跟踪的系统信号.默认为all.如 signal=!SIGIO(或者signal=!io),表示不跟踪SIGIO信号.<br>-e read=set 输出从指定文件中读出 的数据.例如:<br>-e read=3,5<br>-e write=set 输出写入到指定文件中的数据.<br>-o filename 将strace的输出写入文件filename<br><font color=#FF0000>-p pid 跟踪指定的进程pid.<br>-s strsize 指定输出的字符串的最大长度.默认为32.文件名一直全部输出.</font><br>-u username 以username 的UID和GID执行被跟踪的命令</p>
+<p>-c 统计每一系统调用的所执行的时间,次数和出错的次数等.<br>-d 输出strace关于标准错误的调试信息.<br><font color=#FF0000 >-f 跟踪由fork调用所产生的子进程.</font><br>-ff 如果提供-o filename,则所有进程的跟踪结果输出到相应的filename.pid中,pid是各进程的进程号.<br>-F 尝试跟踪vfork调用.在-f时,vfork不被跟踪.<br>-h 输出简要的帮助信息.<br>-i 输出系统调用的入口指针.<br>-q 禁止输出关于脱离的消息.<br>-r 打印出相对时间关于,每一个系统调用.<br><font color=#FF0000 >-t 在输出中的每一行前加上时间信息.<br>-tt 在输出中的每一行前加上时间信息,微秒级.<br>-ttt 微秒级输出,以秒了表示时间.<br>-T 显示每一调用所耗的时间.</font><br>-v 输出所有的系统调用.一些调用关于环境变量,状态,输入输出等调用由于使用频繁,默认不输出.<br>-V 输出strace的版本信息.<br>-x 以十六进制形式输出非标准字符串<br>-xx 所有字符串以十六进制形式输出.<br>-a column 设置返回值的输出位置.默认 为40.</p>
+<span id="more"></span>
+<p><font color=#FF0000 >-e expr 指定一个表达式,用来控制如何跟踪.格式如下:<br>[qualifier=][!]value1[,value2]…<br>qualifier只能是 trace,abbrev,verbose,raw,signal,read,write其中之一.value是用来限定的符号或数字.默认的 qualifier是 trace.感叹号是否定符号.例如:<br>-eopen等价于 -e trace=open,表示只跟踪open调用.而-etrace!=open表示跟踪除了open以外的其他调用.有两个特殊的符号 all 和 none.</font><br><font color=#FF00FF >注意有些shell使用!来执行历史记录里的命令,所以要使用.</font><br>-e trace=set 只跟踪指定的系统 调用.例如:-e trace=open,close,rean,write表示只跟踪这四个系统调用.默认的为set=all.<br>-e trace=file 只跟踪有关文件操作的系统调用.<br>-e trace=process 只跟踪有关进程控制的系统调用.<br>-e trace=network 跟踪与网络有关的所有系统调用.<br>-e strace=signal 跟踪所有与系统信号有关的 系统调用<br>-e trace=ipc 跟踪所有与进程通讯有关的系统调用<br>-e abbrev=set 设定 strace输出的系统调用的结果集.-v 等与 abbrev=none.默认为abbrev=all.<br>-e raw=set 将指 定的系统调用的参数以十六进制显示.<br>-e signal=set 指定跟踪的系统信号.默认为all.如 signal=!SIGIO(或者signal=!io),表示不跟踪SIGIO信号.<br>-e read=set 输出从指定文件中读出 的数据.例如:<br>-e read=3,5<br>-e write=set 输出写入到指定文件中的数据.<br>-o filename 将strace的输出写入文件filename<br><font color=#FF0000>-p pid 跟踪指定的进程pid.<br>-s strsize 指定输出的字符串的最大长度.默认为32.文件名一直全部输出.</font><br>-u username 以username 的UID和GID执行被跟踪的命令</p>
 <h2 id="命令参数演示"><a href="#命令参数演示" class="headerlink" title="命令参数演示"></a>命令参数演示</h2><details>
     <summary>strace ls</summary>
 <pre><code> 
