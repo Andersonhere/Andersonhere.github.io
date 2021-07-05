@@ -2,6 +2,8 @@
 title: strace
 date: 2021-06-21 23:36:21
 tags:
+    - linux
+    - strace
 ---
 ## strace参数列表
 * strace常用参数
