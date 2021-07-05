@@ -25,7 +25,7 @@ tags:
 -x 以十六进制形式输出非标准字符串
 -xx 所有字符串以十六进制形式输出.
 -a column 设置返回值的输出位置.默认 为40.
-<!-- more -->
+<!--more-->
 <font color=#FF0000 >-e expr 指定一个表达式,用来控制如何跟踪.格式如下:
 [qualifier=][!]value1[,value2]…
 qualifier只能是 trace,abbrev,verbose,raw,signal,read,write其中之一.value是用来限定的符号或数字.默认的 qualifier是 trace.感叹号是否定符号.例如:
