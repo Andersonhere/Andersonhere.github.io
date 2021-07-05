@@ -20,30 +20,35 @@
     var CONFIG = {"hostname":"example.com","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="冷静">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Andersonhere">
-<meta property="og:url" content="http://example.com/index.html">
+  <meta name="description" content="const 那些事1.const 含义常类型是指使用类型修饰符const说明的类型，常类型的变量或对象的值是不能被更新的。(注意此处的描述，变量和对象的值不能被更新，也就是说不能通过变量和对象对值进行改变，**但其他方式呢？**) 2.const作用 可以定义常量  1const int a&#x3D;100;   此处const 的作用类似于#define宏定义，那么这两个用法有哪些不同点呢？  #def">
+<meta property="og:type" content="article">
+<meta property="og:title" content="const 那些事">
+<meta property="og:url" content="http://example.com/2021/07/05/const-%E9%82%A3%E4%BA%9B%E4%BA%8B/index.html">
 <meta property="og:site_name" content="Andersonhere">
-<meta property="og:description" content="冷静">
+<meta property="og:description" content="const 那些事1.const 含义常类型是指使用类型修饰符const说明的类型，常类型的变量或对象的值是不能被更新的。(注意此处的描述，变量和对象的值不能被更新，也就是说不能通过变量和对象对值进行改变，**但其他方式呢？**) 2.const作用 可以定义常量  1const int a&#x3D;100;   此处const 的作用类似于#define宏定义，那么这两个用法有哪些不同点呢？  #def">
 <meta property="og:locale">
+<meta property="article:published_time" content="2021-07-05T14:12:18.000Z">
+<meta property="article:modified_time" content="2021-07-05T15:45:22.778Z">
 <meta property="article:author" content="gaoqi">
+<meta property="article:tag" content="const">
+<meta property="article:tag" content="c++">
+<meta property="article:tag" content="常量折叠">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="http://example.com/">
+<link rel="canonical" href="http://example.com/2021/07/05/const-%E9%82%A3%E4%BA%9B%E4%BA%8B/">
 
 
 <script id="page-configurations">
   // https://hexo.io/docs/variables.html
   CONFIG.page = {
     sidebar: "",
-    isHome : true,
-    isPost : false,
+    isHome : false,
+    isPost : true,
     lang   : 'zh-Hans'
   };
 </script>
 
-  <title>Andersonhere</title>
+  <title>const 那些事 | Andersonhere</title>
   
 
 
@@ -146,9 +151,10 @@
         <div class="content-wrap">
           
 
-          <div class="content index posts-expand">
+          <div class="content post posts-expand">
             
-      
+
+    
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-Hans">
@@ -164,10 +170,9 @@
       <meta itemprop="name" content="Andersonhere">
     </span>
       <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/07/05/const-%E9%82%A3%E4%BA%9B%E4%BA%8B/" class="post-title-link" itemprop="url">const 那些事</a>
-        </h2>
+        <h1 class="post-title" itemprop="name headline">
+          const 那些事
+        </h1>
 
         <div class="post-meta">
             <span class="post-meta-item">
@@ -191,7 +196,7 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h1 id="const-那些事"><a href="#const-那些事" class="headerlink" title="const 那些事"></a>const 那些事</h1><h2 id="1-const-含义"><a href="#1-const-含义" class="headerlink" title="1.const 含义"></a>1.const 含义</h2><p>常类型是指使用类型修饰符<strong>const</strong>说明的类型，常类型的变量或对象的值是不能被更新的。(注意此处的描述，变量和对象的值不能被更新，也就是说不能通过变量和对象对值进行改变，**<font style="color:red">但其他方式呢？</font>**)</p>
+        <h1 id="const-那些事"><a href="#const-那些事" class="headerlink" title="const 那些事"></a>const 那些事</h1><h2 id="1-const-含义"><a href="#1-const-含义" class="headerlink" title="1.const 含义"></a>1.const 含义</h2><p>常类型是指使用类型修饰符<strong>const</strong>说明的类型，常类型的变量或对象的值是不能被更新的。(注意此处的描述，变量和对象的值不能被更新，也就是说不能通过变量和对象对值进行改变，**<font style="color:red">但其他方式呢？</font>**)</p>
 <h2 id="2-const作用"><a href="#2-const作用" class="headerlink" title="2.const作用"></a>2.const作用</h2><ul>
 <li>可以定义常量  <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="keyword">int</span> a=<span class="number">100</span>;</span><br></pre></td></tr></table></figure>
   此处const 的作用类似于<code>#define</code>宏定义，那么这两个用法有哪些不同点呢？</li>
@@ -340,246 +345,35 @@
 <p>对于此项，c++11不能进行声明并初始化，也就是上述使用方法。</p>
 <p>参考知识连接：<br>常量折叠；<br>如何防止常量折叠；</p>
 
-      
     </div>
 
     
     
     
+
       <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
+          <div class="post-tags">
+              <a href="/tags/const/" rel="tag"># const</a>
+              <a href="/tags/c/" rel="tag"># c++</a>
+              <a href="/tags/%E5%B8%B8%E9%87%8F%E6%8A%98%E5%8F%A0/" rel="tag"># 常量折叠</a>
+          </div>
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-Hans">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/06/21/strace/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="gaoqi">
-      <meta itemprop="description" content="冷静">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Andersonhere">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/06/21/strace/" class="post-title-link" itemprop="url">strace</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2021-06-21 23:36:21" itemprop="dateCreated datePublished" datetime="2021-06-21T23:36:21+08:00">2021-06-21</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-07-05 21:40:12" itemprop="dateModified" datetime="2021-07-05T21:40:12+08:00">2021-07-05</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="strace参数列表"><a href="#strace参数列表" class="headerlink" title="strace参数列表"></a>strace参数列表</h2><ul>
-<li>strace常用参数</li>
-</ul>
-<p>-c 统计每一系统调用的所执行的时间,次数和出错的次数等.<br>-d 输出strace关于标准错误的调试信息.<br><font color=#FF0000 >-f 跟踪由fork调用所产生的子进程.</font><br>-ff 如果提供-o filename,则所有进程的跟踪结果输出到相应的filename.pid中,pid是各进程的进程号.<br>-F 尝试跟踪vfork调用.在-f时,vfork不被跟踪.<br>-h 输出简要的帮助信息.<br>-i 输出系统调用的入口指针.<br>-q 禁止输出关于脱离的消息.<br>-r 打印出相对时间关于,每一个系统调用.<br><font color=#FF0000 >-t 在输出中的每一行前加上时间信息.<br>-tt 在输出中的每一行前加上时间信息,微秒级.<br>-ttt 微秒级输出,以秒了表示时间.<br>-T 显示每一调用所耗的时间.</font><br>-v 输出所有的系统调用.一些调用关于环境变量,状态,输入输出等调用由于使用频繁,默认不输出.<br>-V 输出strace的版本信息.<br>-x 以十六进制形式输出非标准字符串<br>-xx 所有字符串以十六进制形式输出.<br>-a column 设置返回值的输出位置.默认 为40.</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2021/06/21/strace/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
         
-      
-    </div>
 
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-Hans">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/06/16/vim/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="gaoqi">
-      <meta itemprop="description" content="冷静">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Andersonhere">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/06/16/vim/" class="post-title-link" itemprop="url">vim</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2021-06-16 22:44:51" itemprop="dateCreated datePublished" datetime="2021-06-16T22:44:51+08:00">2021-06-16</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-07-05 21:40:16" itemprop="dateModified" datetime="2021-07-05T21:40:16+08:00">2021-07-05</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <ol>
-<li>关于Vim<br>vim是我最喜欢的编辑器，也是linux下第二强大的编辑器。 虽然emacs是公认的世界第一，我认为使用emacs并没有使用vi进行编辑来得高效。 如果是初学vi，运行一下vimtutor是个聪明的决定。 （如果你的系统环境不是中文，而你想使用中文的vimtutor，就运行vimtutor zh）</li>
-</ol>
-<p>1.1 Vim的几种模式<br>正常模式：可以使用快捷键命令，或按:输入命令行。<br>插入模式：可以输入文本，在正常模式下，按i、a、o等都可以进入插入模式。<br>可视模式：正常模式下按v可以进入可视模式， 在可视模式下，移动光标可以选择文本。按V进入可视行模式， 总是整行整行的选中。ctrl+v进入可视块模式。<br>替换模式：正常模式下，按R进入。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2021/06/16/vim/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
         
-      
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/06/21/strace/" rel="prev" title="strace">
+      <i class="fa fa-chevron-left"></i> strace
+    </a></div>
+      <div class="post-nav-item"></div>
     </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
       </footer>
+    
   </article>
   
   
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-Hans">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/06/01/%E8%BF%AD%E4%BB%A3%E5%99%A8%E5%A4%B1%E6%95%88%E9%97%AE%E9%A2%98/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="gaoqi">
-      <meta itemprop="description" content="冷静">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Andersonhere">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/06/01/%E8%BF%AD%E4%BB%A3%E5%99%A8%E5%A4%B1%E6%95%88%E9%97%AE%E9%A2%98/" class="post-title-link" itemprop="url">迭代器失效问题</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2021-06-01 21:20:11" itemprop="dateCreated datePublished" datetime="2021-06-01T21:20:11+08:00">2021-06-01</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-07-05 21:40:07" itemprop="dateModified" datetime="2021-07-05T21:40:07+08:00">2021-07-05</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="迭代器失效问题"><a href="#迭代器失效问题" class="headerlink" title="迭代器失效问题"></a>迭代器失效问题</h1><ul>
-<li>迭代器初步认识<br><font color=#FF0000 >迭代器</font>（iterator）<font color=#FF0000 >是一个</font>可以对其执行类似指针的操作（如：解除引用（operator*()）和递增（operator++()））的<font color=#FF0000 >对象</font><br>验证：<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;vector&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    vector&lt;<span class="keyword">int</span> &gt;::iterator item;</span><br><span class="line">    cout&lt;&lt;<span class="built_in"><span class="keyword">sizeof</span></span>(item)&lt;&lt;endl;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-得出的结果为8，指针应为4；所以迭代器并不是指针，不能将指针的操作一成不变的应用在迭代器上</li>
-</ul>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2021/06/01/%E8%BF%AD%E4%BB%A3%E5%99%A8%E5%A4%B1%E6%95%88%E9%97%AE%E9%A2%98/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-
   
 
 
@@ -632,6 +426,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#const-%E9%82%A3%E4%BA%9B%E4%BA%8B"><span class="nav-number">1.</span> <span class="nav-text">const 那些事</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-const-%E5%90%AB%E4%B9%89"><span class="nav-number">1.1.</span> <span class="nav-text">1.const 含义</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-const%E4%BD%9C%E7%94%A8"><span class="nav-number">1.2.</span> <span class="nav-text">2.const作用</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#define-%E4%B8%8E-const-%E7%9A%84%E4%B8%8D%E5%90%8C"><span class="nav-number">1.2.1.</span> <span class="nav-text">#define 与 const 的不同</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-const%E5%AF%B9%E8%B1%A1%E9%BB%98%E8%AE%A4%E4%B8%BA%E6%96%87%E4%BB%B6%E5%B1%80%E9%83%A8%E5%8F%98%E9%87%8F"><span class="nav-number">1.3.</span> <span class="nav-text">3.const对象默认为文件局部变量</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-%E5%AE%9A%E4%B9%89%E5%B8%B8%E9%87%8F"><span class="nav-number">1.4.</span> <span class="nav-text">4.定义常量</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-%E5%87%BD%E6%95%B0%E4%B8%AD%E4%BD%BF%E7%94%A8const"><span class="nav-number">1.5.</span> <span class="nav-text">5.函数中使用const</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-%E7%B1%BB%E4%B8%AD%E4%BD%BF%E7%94%A8const"><span class="nav-number">1.6.</span> <span class="nav-text">6.类中使用const</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
